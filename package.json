@@ -1,0 +1,12 @@
+{
+  "name": "XSolve-TV",
+  "private": true,
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "sony-bravia-tv-remote": "^2.0.0",
+    "command-line-args": "^5.0.1",
+    "command-line-usage": "^4.1.0"
+  },
+  "scripts": {},
+  "dependencies": {}
+}
