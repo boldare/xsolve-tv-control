@@ -6,6 +6,7 @@ var SimpleADB = require('simple-adb').SimpleADB;
 
 var sadb = new SimpleADB();
 const config = JSON.parse(fs.readFileSync('tvconfig.json', 'utf8'));
+const appConfig = JSON.parse(fs.readFileSync('appconfig.json', 'utf8'));
 
 const help = [
     {
@@ -39,6 +40,10 @@ const help = [
                 name: 'all',
                 description: 'Selects all TVs.'
             },
+            {
+                name: 'listsoftware',
+                description: 'Displays software list'
+            }
         ]
     }
 ]
@@ -51,7 +56,8 @@ const cliOptionDefinitions = [
     { name: 'poweroff', type: Boolean },
     { name: 'list', type: Boolean },
     { name: 'tv', type: String, multiple: true },
-    { name: 'all', type: Boolean }
+    { name: 'all', type: Boolean },
+    { name: 'run', type: String, multiple: false }
 ]
 const cliOptions = commandLineArgs(cliOptionDefinitions);
 
@@ -97,6 +103,13 @@ if(cliOptions.poweron || cliOptions.poweroff) {
     });
 }
 
+if(cliOptions.run) {
+    console.log(cliOptions.run);
+    return runApplication(tvList, cliOptions.run).then(function() {
+        process.exit(0);
+    });
+}
+
 //=======methods
 
 function powerSet(tvList, powerState) {
@@ -125,6 +138,34 @@ function powerSet(tvList, powerState) {
     });
 }
 
+function runApplication(tvList, applicationName) {
+    console.log(`runApplication`);
+
+    var applicationPackageName = appConfig[applicationName] ? appConfig[applicationName] : applicationName;
+
+    return new Promise(function(resolve, reject){
+        let elementsNumber = tvList.length;
+        let promiseArray = [];
+
+        for (i = 0; i < elementsNumber; i++) {
+            var tvName = tvList[i];
+            console.log('for tvName: ' + tvName);
+            promiseArray.push(ll_runApplication(tvName, applicationPackageName));
+        }
+
+        Promise.all(promiseArray).then(function(result) {
+            for(i = 0; i < elementsNumber; i++) {
+                if(!result[i]) {
+                    resolve(false);
+                    return;
+                }
+            }
+
+            resolve(true);
+        });
+    });
+}
+
 //=======internal
 
 function ll_powerSet(tvName, powerState) {
@@ -133,3 +174,38 @@ function ll_powerSet(tvName, powerState) {
 
     return new BraviaRemoteControl(tvConfig.ip, 80, tvConfig.key).sendAction(powerState ? 'PowerOn' : 'PowerOff');
 }
+
+function ll_runApplication(tvName, applicationPackageName) {
+    console.log(`running "${ applicationPackageName }" on "${ tvName }" TV.`)
+    var sadb = new SimpleADB();
+    var ipAddress = config[tvName].ip;
+
+    return sadb.connect(ipAddress).then(function() {
+        return sadb.execAdbShellCommand(`monkey -p ${ applicationPackageName } -c android.intent.category.LAUNCHER 1`);
+        // return sadb.startApp(applicationPackageName, 'Opera');
+    });
+}
+
+function ll_executeAllTv(func) {
+    return new Promise(function(resolve, reject){
+        let elementsNumber = tvList.length;
+        let promiseArray = [];
+
+        for (i = 0; i < elementsNumber; i++) {
+            var tvName = tvList[i];
+            console.log('for tvName: ' + tvName);
+            promiseArray.push(func);
+        }
+
+        Promise.all(promiseArray).then(function(result) {
+            for(i = 0; i < elementsNumber; i++) {
+                if(!result[i]) {
+                    resolve(false);
+                    return;
+                }
+            }
+
+            resolve(true);
+        });
+    });
+};
