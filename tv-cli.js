@@ -2,6 +2,9 @@ const BraviaRemoteControl = require('sony-bravia-tv-remote');
 const commandLineArgs = require('command-line-args');
 const clu = require('command-line-usage');
 const fs = require('fs');
+var SimpleADB = require('simple-adb').SimpleADB;
+
+var sadb = new SimpleADB();
 const config = JSON.parse(fs.readFileSync('tvconfig.json', 'utf8'));
 
 const help = [
@@ -69,49 +72,44 @@ if(cliOptions.list) {
     process.exit(0);
 }
 
-if(cliOptions.poweron || cliOptions.poweroff) {
-    if(!cliOptions.tv && !cliOptions.all) {
-        console.log('Missing --tv or --all parameter.');
+//tv dependant
+if(!cliOptions.tv && !cliOptions.all) {
+    console.log('Missing --tv or --all parameter.');
+    process.exit(1);
+}
+
+var tvList = cliOptions.all ? Object.keys(config) : cliOptions.tv;
+
+//validate tv
+for (i = 0; i < tvList.length; i++) {
+    var tvName = tvList[i];
+    console.log(`Selecting "${ tvName }" TV.`);
+
+    if(!config[tvList[i]]) {
+        console.log(`Incorrect TV name "${ tvName }"`);
         process.exit(1);
     }
-
-    if(cliOptions.tv) {
-        if(!config[cliOptions.tv]) {
-            console.log('Incorrect TV name.')
-            process.exit(1);
-        }
-
-        powerSet(cliOptions.tv, cliOptions.poweron ? true : false).then(function() {
-            process.exit(0);
-        });
-    }
-
-    if(cliOptions.all) {
-        powerSetAll(cliOptions.poweron ? true : false);
-    }
 }
 
-//=======interneal
-
-function powerSet(tvName, powerState) {
-    console.log(`powerSet TV ${ tvName } to state: ${ powerState }`);
-    var tvConfig = config[tvName];
-    return new BraviaRemoteControl(tvConfig.ip, 80, tvConfig.key).sendAction(powerState ? 'PowerOn' : 'PowerOff');
+if(cliOptions.poweron || cliOptions.poweroff) {
+    return powerSet(tvList, cliOptions.poweron ? true : false).then(function() {
+        process.exit(0);
+    });
 }
 
-function powerSetAll(powerState) {
+//=======methods
+
+function powerSet(tvList, powerState) {
     console.log(`powerSetAll TV to state: ${ powerState }`);
 
-
     return new Promise(function(resolve, reject){
-        var tvNames = Object.keys(config);
-        let elementsNumber = tvNames.length;
+        let elementsNumber = tvList.length;
         let promiseArray = [];
 
         for (i = 0; i < elementsNumber; i++) {
-            var tvName = tvNames[i];
+            var tvName = tvList[i];
             console.log('for tvName: ' + tvName);
-            promiseArray.push(powerSet(tvName, powerState));
+            promiseArray.push(ll_powerSet(tvName, powerState));
         }
 
         Promise.all(promiseArray).then(function(result) {
@@ -121,7 +119,17 @@ function powerSetAll(powerState) {
                     return;
                 }
             }
+
             resolve(true);
         });
     });
+}
+
+//=======internal
+
+function ll_powerSet(tvName, powerState) {
+    console.log(`powerSet TV ${ tvName } to state: ${ powerState }`);
+    var tvConfig = config[tvName];
+
+    return new BraviaRemoteControl(tvConfig.ip, 80, tvConfig.key).sendAction(powerState ? 'PowerOn' : 'PowerOff');
 }
