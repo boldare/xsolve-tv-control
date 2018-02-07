@@ -176,36 +176,39 @@ function ll_powerSet(tvName, powerState) {
 }
 
 function ll_runApplication(tvName, applicationPackageName) {
-    console.log(`running "${ applicationPackageName }" on "${ tvName }" TV.`)
     var sadb = new SimpleADB();
     var ipAddress = config[tvName].ip;
 
+    console.log(`running "${ applicationPackageName }" on "${ tvName }" TV (${ ipAddress }).`);
+
     return sadb.connect(ipAddress).then(function() {
-        return sadb.execAdbShellCommand(`monkey -p ${ applicationPackageName } -c android.intent.category.LAUNCHER 1`);
-        // return sadb.startApp(applicationPackageName, 'Opera');
+        return sadb.execAdbShellCommand(`monkey -p ${ applicationPackageName } -c android.intent.category.LAUNCHER 1`)
     });
+
 }
 
-function ll_executeAllTv(func) {
-    return new Promise(function(resolve, reject){
-        let elementsNumber = tvList.length;
-        let promiseArray = [];
-
-        for (i = 0; i < elementsNumber; i++) {
-            var tvName = tvList[i];
-            console.log('for tvName: ' + tvName);
-            promiseArray.push(func);
-        }
-
-        Promise.all(promiseArray).then(function(result) {
-            for(i = 0; i < elementsNumber; i++) {
-                if(!result[i]) {
-                    resolve(false);
-                    return;
-                }
-            }
-
-            resolve(true);
-        });
-    });
-};
+// not working
+//
+// function ll_executeAllTv(func) {
+//     return new Promise(function(resolve, reject){
+//         let elementsNumber = tvList.length;
+//         let promiseArray = [];
+//
+//         for (i = 0; i < elementsNumber; i++) {
+//             var tvName = tvList[i];
+//             console.log('for tvName: ' + tvName);
+//             promiseArray.push(func);
+//         }
+//
+//         Promise.all(promiseArray).then(function(result) {
+//             for(i = 0; i < elementsNumber; i++) {
+//                 if(!result[i]) {
+//                     resolve(false);
+//                     return;
+//                 }
+//             }
+//
+//             resolve(true);
+//         });
+//     });
+// };
