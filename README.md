@@ -28,6 +28,10 @@ Go to `Settings` -> `Developer options` and enable `ADB debugging`.
 Help may be displayed using `--help` option.
 `node tv-cli.js --help`
 
+## List TVs
+Displays available TVs (set in tvconfig.json).
+`node tv-cli.js --list`
+
 ## Select TV
 It's possible to select specific TV or TVs using `--tv` option.
 `node tv-cli.js --tv "tv name 1"`
