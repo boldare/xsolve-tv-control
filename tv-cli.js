@@ -28,6 +28,10 @@ const help = [
                 description: 'Turns TV off.'
             },
             {
+                name: 'volume',
+                description: 'Sets volume. Allowed range: 0-100.'
+            },
+            {
                 name: 'list',
                 description: 'Displays available TVs'
             },
@@ -57,6 +61,7 @@ const cliOptionDefinitions = [
     { name: 'help', alias: 'h', type: Boolean },
     { name: 'poweron', type: Boolean },
     { name: 'poweroff', type: Boolean },
+    { name: 'volume', type: Number },
     { name: 'list', type: Boolean },
     { name: 'tv', type: String, multiple: true },
     { name: 'all', type: Boolean },
@@ -109,6 +114,19 @@ if(cliOptions.poweron || cliOptions.poweroff) {
     });
 }
 
+if(typeof(cliOptions.volume) !== 'undefined') {
+    var volume = cliOptions.volume;
+
+    if(volume < 0 || volume > 100) {
+        console.log(`Volume can be set to 0-100 value only.`);
+        process.exit(1);
+    }
+
+    return setVolume(tvList, volume).then(function() {
+        process.exit(0);
+    });
+}
+
 if(cliOptions.run) {
     return runApplication(tvList, cliOptions.run).then(function() {
         process.exit(0);
@@ -147,6 +165,15 @@ function powerSet(tvList, powerState) {
     });
 }
 
+async function setVolume(tvList, volume) {
+    console.log(`setVolume "${ volume }"`);
+    let elementsNumber = tvList.length;
+
+    for (i = 0; i < elementsNumber; i++) {
+        await ll_setVolume(tvList[i], volume);
+    }
+}
+
 async function runApplication(tvList, applicationName) {
     var applicationPackageName = appConfig[applicationName] ? appConfig[applicationName] : applicationName;
     let elementsNumber = tvList.length;
@@ -174,11 +201,28 @@ function ll_powerSet(tvName, powerState) {
     return new BraviaRemoteControl(tvConfig.ip, 80, tvConfig.key).sendAction(powerState ? 'PowerOn' : 'PowerOff');
 }
 
+function ll_setVolume(tvName, volume) {
+    var sadb = new SimpleADB();
+    var ipAddress = config[tvName].ip;
+
+    console.log(`Setting volume "${ volume }" on "${ tvName }" TV (${ ipAddress }).`);
+
+    return sadb
+        .connect(ipAddress)
+        .then(function() {
+            return sadb.execAdbShellCommand(`service call audio 3 i32 3 i32 ${ volume } i32 1`); //audio output 3
+        })
+        .catch(e => {
+            console.log('ll_setVolume failed - retrying');
+            return ll_setVolume(tvName, volume);
+        });
+}
+
 function ll_runApplication(tvName, applicationPackageName) {
     var sadb = new SimpleADB();
     var ipAddress = config[tvName].ip;
 
-    console.log(`running "${ applicationPackageName }" on "${ tvName }" TV (${ ipAddress }).`);
+    console.log(`Running "${ applicationPackageName }" on "${ tvName }" TV (${ ipAddress }).`);
 
     return sadb
         .connect(ipAddress)
