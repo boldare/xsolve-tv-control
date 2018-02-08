@@ -4,7 +4,7 @@ const clu = require('command-line-usage');
 const fs = require('fs');
 var SimpleADB = require('simple-adb').SimpleADB;
 
-var sadb = new SimpleADB();
+// var sadb = new SimpleADB();
 const config = JSON.parse(fs.readFileSync('tvconfig.json', 'utf8'));
 const appConfig = JSON.parse(fs.readFileSync('appconfig.json', 'utf8'));
 
@@ -41,8 +41,12 @@ const help = [
                 description: 'Selects all TVs.'
             },
             {
-                name: 'listsoftware',
-                description: 'Displays software list'
+                name: 'run',
+                description: 'Runs application. Example: --yt opera'
+            },
+            {
+                name: 'yt',
+                description: 'Runs youtube movie. Example --yt "https://www.youtube.com/watch?v=G1IbRujko-A"'
             }
         ]
     }
@@ -57,9 +61,12 @@ const cliOptionDefinitions = [
     { name: 'list', type: Boolean },
     { name: 'tv', type: String, multiple: true },
     { name: 'all', type: Boolean },
-    { name: 'run', type: String, multiple: false }
+    { name: 'run', type: String, multiple: false },
+    { name: 'yt', type: String, multiple: false }
 ]
 const cliOptions = commandLineArgs(cliOptionDefinitions);
+
+console.log(cliOptions.tv);
 
 if(cliOptions.help) {
     console.log(clu_help);
@@ -110,6 +117,13 @@ if(cliOptions.run) {
     });
 }
 
+if(cliOptions.yt) {
+    console.log(cliOptions.yt);
+    return runYoutubeMovie(tvList, cliOptions.yt).then(function() {
+        process.exit(0);
+    });
+}
+
 //=======methods
 
 function powerSet(tvList, powerState) {
@@ -138,32 +152,26 @@ function powerSet(tvList, powerState) {
     });
 }
 
-function runApplication(tvList, applicationName) {
+async function runApplication(tvList, applicationName) {
     console.log(`runApplication`);
 
     var applicationPackageName = appConfig[applicationName] ? appConfig[applicationName] : applicationName;
 
-    return new Promise(function(resolve, reject){
-        let elementsNumber = tvList.length;
-        let promiseArray = [];
+    let elementsNumber = tvList.length;
 
-        for (i = 0; i < elementsNumber; i++) {
-            var tvName = tvList[i];
-            console.log('for tvName: ' + tvName);
-            promiseArray.push(ll_runApplication(tvName, applicationPackageName));
-        }
+    for (i = 0; i < elementsNumber; i++) {
+        await ll_runApplication(tvList[i], applicationPackageName);
+    }
+}
 
-        Promise.all(promiseArray).then(function(result) {
-            for(i = 0; i < elementsNumber; i++) {
-                if(!result[i]) {
-                    resolve(false);
-                    return;
-                }
-            }
+async function runYoutubeMovie(tvList, url) {
+    console.log(`runYoutubeMovie`);
 
-            resolve(true);
-        });
-    });
+    let elementsNumber = tvList.length;
+
+    for (i = 0; i < elementsNumber; i++) {
+        await ll_runYoutubeMovie(tvList[i], url);
+    }
 }
 
 //=======internal
@@ -183,32 +191,26 @@ function ll_runApplication(tvName, applicationPackageName) {
 
     return sadb.connect(ipAddress).then(function() {
         return sadb.execAdbShellCommand(`monkey -p ${ applicationPackageName } -c android.intent.category.LAUNCHER 1`)
+    })
+    .catch(e => {
+        console.log('ll_runApplication failed - retrying');
+        return ll_runApplication(tvName, applicationPackageName);
     });
-
 }
 
-// not working
-//
-// function ll_executeAllTv(func) {
-//     return new Promise(function(resolve, reject){
-//         let elementsNumber = tvList.length;
-//         let promiseArray = [];
-//
-//         for (i = 0; i < elementsNumber; i++) {
-//             var tvName = tvList[i];
-//             console.log('for tvName: ' + tvName);
-//             promiseArray.push(func);
-//         }
-//
-//         Promise.all(promiseArray).then(function(result) {
-//             for(i = 0; i < elementsNumber; i++) {
-//                 if(!result[i]) {
-//                     resolve(false);
-//                     return;
-//                 }
-//             }
-//
-//             resolve(true);
-//         });
-//     });
-// };
+function ll_runYoutubeMovie(tvName, url) {
+    var sadb = new SimpleADB();
+    var ipAddress = config[tvName].ip;
+
+    console.log(`running youtube "${ url }" on "${ tvName }" TV (${ ipAddress }).`);
+
+    return sadb
+        .connect(ipAddress)
+        .then(function() {
+            return sadb.execAdbShellCommand(`am start -a android.intent.action.VIEW "${ url }"`)
+        })
+        .catch(e => {
+            console.log('ll_runYoutubeMovie failed - retrying');
+            return ll_runYoutubeMovie(tvName, url);
+        });
+}
