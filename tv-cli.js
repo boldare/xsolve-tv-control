@@ -166,7 +166,6 @@ function powerSet(tvList, powerState) {
 }
 
 async function setVolume(tvList, volume) {
-    console.log(`setVolume "${ volume }"`);
     let elementsNumber = tvList.length;
 
     for (i = 0; i < elementsNumber; i++) {
