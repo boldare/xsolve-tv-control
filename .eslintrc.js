@@ -9,6 +9,9 @@ module.exports = {
         "ecmaVersion": 2017
     },
     "rules": {
-
+        'no-console': 'off',
+        'camelcase': 'off',
+        'max-len': 'off',
+        'require-jsdoc': 'off',
     }
 };
