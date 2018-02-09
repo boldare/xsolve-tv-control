@@ -2,12 +2,17 @@
   "name": "XSolve-TV-control",
   "private": true,
   "license": "UNLICENSED",
-  "devDependencies": {
+  "dependencies": {
     "sony-bravia-tv-remote": "^2.0.0",
     "command-line-args": "^5.0.1",
     "command-line-usage": "^4.1.0",
     "simple-adb": "^1.7.8"
   },
-  "scripts": {},
-  "dependencies": {}
+  "devDependencies": {
+    "eslint": "^4.16.0",
+    "eslint-config-google": "^0.9.1"
+  },
+  "scripts": {
+    "eslint": "eslint tv-cli.js"
+  }
 }
