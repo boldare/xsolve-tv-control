@@ -80,8 +80,6 @@ const cliOptionDefinitions = [
 ];
 const cliOptions = commandLineArgs(cliOptionDefinitions);
 
-console.log(cliOptions.tv);
-
 if (cliOptions.help) {
     console.log(cluHelp);
     process.exit(0);
@@ -101,7 +99,7 @@ if (cliOptions.list) {
 
 // tv dependant
 if (!cliOptions.tv && !cliOptions.all) {
-    console.log('Missing --tv or --all parameter.');
+    console.error('Missing --tv or --all parameter.');
     process.exit(1);
 }
 
@@ -113,7 +111,7 @@ for (let i = 0; i < tvList.length; i++) {
     console.log(`Selecting "${ tvName }" TV.`);
 
     if (!config[tvList[i]]) {
-        console.log(`Incorrect TV name "${ tvName }"`);
+        console.error(`Incorrect TV name "${ tvName }"`);
         process.exit(1);
     }
 }
@@ -128,7 +126,7 @@ if (typeof(cliOptions.volume) !== 'undefined') {
     let volume = cliOptions.volume;
 
     if (volume < 0 || volume > 100) {
-        console.log(`Volume can be set to 0-100 value only.`);
+        console.error(`Volume can be set to 0-100 value only.`);
         process.exit(1);
     }
 
@@ -158,7 +156,6 @@ if (cliOptions.yt) {
 }
 
 // methods
-
 function powerSet(tvList, powerState) {
     return new Promise(function(resolve, reject) {
         let elementsNumber = tvList.length;
