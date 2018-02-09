@@ -56,6 +56,14 @@ If application is added to `appconfig.js` application name may be used:
 It's also possible to run applicaiton using package name:
 `node tv-cli.js --tv "tv name 1" "tv name 4" --run com.opera.sdk.example`
 
+## View page
+You can view webpage using `--viewpage` option. Full url (with `http://` or `https://` must be used). Default browser will be used.
+`node tv-cli.js --tv "tv name 1" "tv name 4" --viewpage "https://google.com/"`
+
+### Browser
+You may also specify specific browser using `--browser` option:
+`node tv-cli.js --tv "tv name 1" "tv name 4" --viewpage "https://google.com/" --browser chrome`
+
 ## Run Youtube URL
 You can play youtube url using `--yt` command:
 `node tv-cli.js --all --yt "https://www.youtube.com/watch?v=G1IbRujko-A"`
