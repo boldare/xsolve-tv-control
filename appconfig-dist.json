@@ -1,3 +1,9 @@
 {
-	"opera": "com.opera.sdk.example"
+	"chrome": {
+		"basic": "com.android.chrome",
+		"full": "com.android.chrome/com.google.android.apps.chrome.Main"
+	},
+	"opera": {
+		"basic": "com.opera.sdk.example"
+	}
 }
