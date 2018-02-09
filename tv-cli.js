@@ -9,7 +9,7 @@ const appConfig = JSON.parse(fs.readFileSync('appconfig.json', 'utf8'));
 
 const help = [
     {
-        header: 'XSolve TV control',
+        header: 'XSolve TV Control',
         content: 'Help.'
     },
     {
@@ -48,6 +48,14 @@ const help = [
                 description: 'Runs application. Example: --yt opera'
             },
             {
+                name: 'viewpage',
+                description: 'Runs youtube movie. Example --viewpage "https://www.google.com"'
+            },
+            {
+                name: 'browser',
+                description: 'additional parameter for --viewpage. Specific browser may be specified (for example "chrome"). Browser must be defined in "appconfig.json" file.'
+            },
+            {
                 name: 'yt',
                 description: 'Runs youtube movie. Example --yt "https://www.youtube.com/watch?v=G1IbRujko-A"'
             }
@@ -66,6 +74,8 @@ const cliOptionDefinitions = [
     { name: 'tv', type: String, multiple: true },
     { name: 'all', type: Boolean },
     { name: 'run', type: String, multiple: false },
+    { name: 'viewpage', type: String, multiple: false },
+    { name: 'browser', type: String, multiple: false },
     { name: 'yt', type: String, multiple: false }
 ]
 const cliOptions = commandLineArgs(cliOptionDefinitions);
@@ -133,6 +143,14 @@ if(cliOptions.run) {
     });
 }
 
+if(cliOptions.viewpage) {
+    var browser = cliOptions.browser ? cliOptions.browser : null;
+
+    return viewPage(tvList, cliOptions.viewpage, browser).then(function() {
+        process.exit(0);
+    });
+}
+
 if(cliOptions.yt) {
     return runYoutubeMovie(tvList, cliOptions.yt).then(function() {
         process.exit(0);
@@ -174,11 +192,30 @@ async function setVolume(tvList, volume) {
 }
 
 async function runApplication(tvList, applicationName) {
-    var applicationPackageName = appConfig[applicationName] ? appConfig[applicationName] : applicationName;
+    var applicationPackageName = appConfig[applicationName].basic ? appConfig[applicationName].basic : applicationName;
     let elementsNumber = tvList.length;
 
     for (i = 0; i < elementsNumber; i++) {
         await ll_runApplication(tvList[i], applicationPackageName);
+    }
+}
+
+async function viewPage(tvList, pageUrl, browser) {
+    let elementsNumber = tvList.length;
+    var customBrowserPackage = false;
+
+    if(browser) {
+        if(appConfig[browser].full) {
+            customBrowserPackage = appConfig[browser].full;
+        } else {
+            console.log(`Browser "${ browser }" full package name is not set in appconfig.json file. ` +
+            `You may run default browser by omitting "--browser" option.`);
+            process.exit(1);
+        }
+    }
+
+    for (i = 0; i < elementsNumber; i++) {
+        await ll_viewPage(tvList[i], pageUrl, customBrowserPackage);
     }
 }
 
@@ -214,6 +251,27 @@ function ll_setVolume(tvName, volume) {
         .catch(e => {
             console.log('ll_setVolume failed - retrying');
             return ll_setVolume(tvName, volume);
+        });
+}
+
+function ll_viewPage(tvName, pageUrl, customBrowserPackage) {
+    var sadb = new SimpleADB();
+    var ipAddress = config[tvName].ip;
+
+    console.log(`Viewing "${ pageUrl }" page on "${ tvName }" TV (${ ipAddress }).`);
+
+    return sadb
+        .connect(ipAddress)
+        .then(function() {
+            if(customBrowserPackage) {
+                return sadb.execAdbShellCommand(`am start -n ${ customBrowserPackage } -d "${ pageUrl }"`);
+            }
+
+            return sadb.execAdbShellCommand(`am start -a android.intent.action.VIEW "${ pageUrl }"`);//default browser
+        })
+        .catch(e => {
+            console.log('ll_viewPage failed - retrying');
+            return ll_viewPage(tvName, pageUrl, customBrowserPackage);
         });
 }
 
