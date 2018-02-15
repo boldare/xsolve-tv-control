@@ -45,7 +45,11 @@ const help = [
             },
             {
                 name: 'run',
-                description: 'Runs application. Example: --yt opera',
+                description: 'Runs application. Example: --run opera',
+            },
+            {
+                name: 'kill',
+                description: 'Kills application. Example: --kill opera',
             },
             {
                 name: 'viewpage',
@@ -74,6 +78,7 @@ const cliOptionDefinitions = [
     {name: 'tv', type: String, multiple: true},
     {name: 'all', type: Boolean},
     {name: 'run', type: String, multiple: false},
+    {name: 'kill', type: String, multiple: false},
     {name: 'viewpage', type: String, multiple: false},
     {name: 'browser', type: String, multiple: false},
     {name: 'yt', type: String, multiple: false},
@@ -141,6 +146,12 @@ if (cliOptions.run) {
     });
 }
 
+if (cliOptions.kill) {
+    killApplication(tvList, cliOptions.kill).then(function() {
+        process.exit(0);
+    });
+}
+
 if (cliOptions.viewpage) {
     let browser = cliOptions.browser ? cliOptions.browser : null;
 
@@ -194,6 +205,15 @@ async function runApplication(tvList, applicationName) {
 
     for (let i = 0; i < elementsNumber; i++) {
         await ll_runApplication(tvList[i], applicationPackageName);
+    }
+}
+
+async function killApplication(tvList, applicationName) {
+    let applicationPackageName = appConfig[applicationName].basic ? appConfig[applicationName].basic : applicationName;
+    let elementsNumber = tvList.length;
+
+    for (let i = 0; i < elementsNumber; i++) {
+        await ll_killApplication(tvList[i], applicationPackageName);
     }
 }
 
@@ -286,6 +306,23 @@ function ll_runApplication(tvName, applicationPackageName) {
         .catch((e) => {
             console.log('ll_runApplication failed - retrying');
             return ll_runApplication(tvName, applicationPackageName);
+        });
+}
+
+function ll_killApplication(tvName, applicationPackageName) {
+    let sadb = new SimpleADB();
+    let ipAddress = config[tvName].ip;
+
+    console.log(`Killing "${ applicationPackageName }" on "${ tvName }" TV (${ ipAddress }).`);
+
+    return sadb
+        .connect(ipAddress)
+        .then(function() {
+            return sadb.execAdbShellCommand(`am force-stop ${ applicationPackageName }`);
+        })
+        .catch((e) => {
+            console.log('ll_killApplication failed - retrying');
+            return ll_killApplication(tvName, applicationPackageName);
         });
 }
 
