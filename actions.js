@@ -11,6 +11,7 @@ exports.getTvList = function() {
 }
 
 exports.powerSet = function(tvList, powerState) {
+    console.log(tvList);
     return new Promise(function(resolve, reject) {
         let elementsNumber = tvList.length;
         let promiseArray = [];

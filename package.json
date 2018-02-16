@@ -1,18 +1,22 @@
 {
-  "name": "XSolve-TV-control",
-  "private": true,
-  "license": "UNLICENSED",
-  "dependencies": {
-    "sony-bravia-tv-remote": "^2.0.0",
-    "command-line-args": "^5.0.1",
-    "command-line-usage": "^4.1.0",
-    "simple-adb": "^1.7.8"
-  },
-  "devDependencies": {
-    "eslint": "^4.16.0",
-    "eslint-config-google": "^0.9.1"
-  },
-  "scripts": {
-    "eslint": "eslint tv-cli.js constants.js"
-  }
+    "name": "XSolve-TV-control",
+    "private": true,
+    "license": "UNLICENSED",
+    "dependencies": {
+        "bootstrap": "^4.0.0",
+        "command-line-args": "^5.0.1",
+        "command-line-usage": "^4.1.0",
+        "electron": "^1.8.2",
+        "jquery": "^3.3.1",
+        "simple-adb": "^1.7.8",
+        "sony-bravia-tv-remote": "^2.0.0"
+    },
+    "devDependencies": {
+        "eslint": "^4.16.0",
+        "eslint-config-google": "^0.9.1"
+    },
+    "scripts": {
+        "eslint": "eslint tv-cli.js constants.js"
+    },
+    "main": "main.js"
 }

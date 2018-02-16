@@ -1,0 +1,38 @@
+html {
+    position: relative;
+    min-height: 100%;
+    width: 100vw;
+}
+
+body {
+    width: 100vw;
+    background-color: #e2e2e2;
+}
+.main {
+    margin-top: 20px;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 80px;
+}
+
+.tv-container {
+    align: center;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-auto-rows: auto;
+    grid-gap: 10px;
+}
+
+.power-on {
+    background-color: #d3f4d0;
+}
+
+.power-off {
+    background-color: #ffbcbc;
+}
+
+.checkbox-big {
+    width: 20px;
+    height: 20px;
+}

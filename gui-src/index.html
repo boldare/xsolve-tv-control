@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <!-- Bootstrap CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../node_modules/normalize.css/normalize.css" rel="stylesheet">
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../gui-assets/css/index.css" rel="stylesheet">
+    <link href="../gui-assets/css/footer.css" rel="stylesheet">
+
+    <title>XSolve TV Control</title>
+    <script>
+        window.$ = window.jQuery = require('jquery');
+    </script>
+
+    </head>
+    <body>
+        <nav class="navbar navbar-expand navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">XSolve TV Control</a>
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a
+                            class="nav-link dropdown-toggle"
+                            href="#" id="navbarDropdown"
+                            role="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                        >
+                        Power
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" onclick="powerOn()" href="#">Power on</a>
+                            <a class="dropdown-item" onclick="powerOff()" href="#">Power off</a>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a
+                            class="nav-link dropdown-toggle"
+                            href="#" id="navbarDropdown"
+                            role="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                        >
+                        Actions
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#">Set Volume</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Run Application</a>
+                            <a class="dropdown-item" href="#">Kill Application<a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">View Page</a>
+                            <a class="dropdown-item" href="#">View Youtube</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="main">
+            <div id="tvList" class="tv-container row justify-content-md-left"> Loading... </div>
+        </div>
+        <div class="footer">
+            <footer>
+                <script>
+                    document.write(`Node ${ process.versions.node }, Chromium ${ process.versions.chrome }, Electron ${ process.versions.electron }`)
+                </script>
+            </footer>
+        </div>
+
+        <script src="index.js"></script>
+        <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    </body>
+</html>

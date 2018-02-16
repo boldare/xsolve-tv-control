@@ -1,0 +1,15 @@
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 50px;
+    line-height: 50px;
+    background-color: #d0d0d0;
+    text-align: right;
+    margin-top: 100px;
+}
+
+footer {
+    margin-right: 10px;
+    font-size: 12px;
+}
