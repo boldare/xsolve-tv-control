@@ -7,7 +7,7 @@ const tvlistJson = actions.getTvList();
 
 var tvListElem = document.getElementById('tvList')
 
-function getData() {
+function displayDevices() {
     tvListElem.innerHTML = '';
 
     for (var name in tvlistJson) {
@@ -27,13 +27,7 @@ function getData() {
     }
 }
 
-getData();
-
-// function selectAllCheckboxes() {
-//
-// }
-// document.querySelector('#checkbox-select-all').addEventListener('click', selectAllCheckboxes)
-getSelectedDevices()
+displayDevices();
 
 function getSelectedDevices() {
     var array = []
@@ -54,11 +48,16 @@ function powerOff() {
     return actions.powerSet(getSelectedDevices(), false);
 }
 
-function runYoutubeDialog() {
-    let win = new BrowserWindow({ parent: require('electron').remote.getCurrentWindow(), modal: true, frame: false, width: 400, height: 200});
-    win.on('close', function() { win = null });
-    win.loadURL(path.join('file://', __dirname, 'youtube.html'));
-    win.show();
+
+function runYoutubeMovie() {
+    console.log('runYoutubeMovie');
+    let url = document.getElementById('youtubeUrl').value;
+    document.getElementById('runYoutubeButton').setAttribute('disabled', '');
+
+    return actions.runYoutubeMovie(getSelectedDevices(), url).then(function() {
+        console.log('unlocking Run button');
+        document.getElementById('runYoutubeButton').removeAttribute('disabled');
+    });
 }
 
 //test only
