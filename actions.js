@@ -79,7 +79,7 @@ exports.viewPage = async function (tvList, pageUrl, browser) {
     }
 }
 
-async function runYoutubeMovie(tvList, url) {
+exports.runYoutubeMovie = async function (tvList, url) {
     let elementsNumber = tvList.length;
 
     for (let i = 0; i < elementsNumber; i++) {

@@ -59,19 +59,19 @@ if (typeof(cliOptions.volume) !== 'undefined') {
         process.exit(1);
     }
 
-    setVolume(tvList, volume).then(function() {
+    actions.setVolume(tvList, volume).then(function() {
         process.exit(0);
     });
 }
 
 if (cliOptions.run) {
-    runApplication(tvList, cliOptions.run).then(function() {
+    actions.runApplication(tvList, cliOptions.run).then(function() {
         process.exit(0);
     });
 }
 
 if (cliOptions.kill) {
-    killApplication(tvList, cliOptions.kill).then(function() {
+    actions.killApplication(tvList, cliOptions.kill).then(function() {
         process.exit(0);
     });
 }
@@ -79,13 +79,13 @@ if (cliOptions.kill) {
 if (cliOptions.viewpage) {
     let browser = cliOptions.browser ? cliOptions.browser : null;
 
-    viewPage(tvList, cliOptions.viewpage, browser).then(function() {
+    actions.viewPage(tvList, cliOptions.viewpage, browser).then(function() {
         process.exit(0);
     });
 }
 
 if (cliOptions.yt) {
-    runYoutubeMovie(tvList, cliOptions.yt).then(function() {
+    actions.runYoutubeMovie(tvList, cliOptions.yt).then(function() {
         process.exit(0);
     });
 }
