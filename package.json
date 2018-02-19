@@ -16,7 +16,7 @@
         "eslint-config-google": "^0.9.1"
     },
     "scripts": {
-        "eslint": "eslint tv-cli.js constants.js"
+        "eslint": "eslint tv-cli.js constants.js actions.js main.js"
     },
     "main": "main.js"
 }

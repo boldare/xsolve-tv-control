@@ -1,64 +1,46 @@
-const {app, BrowserWindow, Menu} = require('electron')
-const path = require('path')
-const url = require('url')
+const {app, BrowserWindow} = require('electron');
+const path = require('path');
+const url = require('url');
 
-let win
+let win;
 
-function createWindow () {
+function createWindow() {
     win = new BrowserWindow(
         {
             // frame: false,
-            width: 800,
+            width: 900,
             minWidth: 500,
-            height: 600,
-            minHeight: 500
+            height: 700,
+            minHeight: 500,
         }
-    )
+    );
 
+    win.setMenu(null);
 
     win.loadURL(url.format({
         pathname: path.join(__dirname, 'gui-src/index.html'),
         protocol: 'file:',
-        slashes: true
-    }))
+        slashes: true,
+    }));
 
     // win.setFullScreen(true);
-    win.webContents.openDevTools()
-
-    var menu = Menu.buildFromTemplate([
-        {
-            label: "Menu",
-            submenu: [
-                {
-                    type: 'separator'
-                },
-                {
-                    label: "Quit",
-                    click() {
-                        app.quit()
-                    }
-                }
-            ]
-        }
-    ])
-
-    Menu.setApplicationMenu(menu);
+    // win.webContents.openDevTools()
 
     win.on('closed', () => {
-        win = null
-    })
+        win = null;
+    });
 }
 
-app.on('ready', createWindow)
+app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-        app.quit()
+        app.quit();
     }
-})
+});
 
 app.on('activate', () => {
     if (win === null) {
-        createWindow()
+        createWindow();
     }
-})
+});

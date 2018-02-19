@@ -24,15 +24,11 @@ body {
     grid-gap: 10px;
 }
 
-.power-on {
-    background-color: #d3f4d0;
-}
-
-.power-off {
-    background-color: #ffbcbc;
-}
-
 .checkbox-big {
     width: 20px;
     height: 20px;
+}
+
+.card {
+    background-color: #d8d8d8;
 }

@@ -1,14 +1,13 @@
 const BraviaRemoteControl = require('sony-bravia-tv-remote');
-const fs = require('fs');
 const SimpleADB = require('simple-adb').SimpleADB;
 
 const config = require('./tvconfig.json');
-const appConfig = require('./appconfig.json')
+const appConfig = require('./appconfig.json');
 
 
 exports.getTvList = function() {
     return config;
-}
+};
 
 exports.powerSet = function(tvList, powerState) {
     console.log(tvList);
@@ -33,7 +32,7 @@ exports.powerSet = function(tvList, powerState) {
             resolve(true);
         });
     });
-}
+};
 
 exports.setVolume = async function setVolume(tvList, volume) {
     let elementsNumber = tvList.length;
@@ -41,7 +40,7 @@ exports.setVolume = async function setVolume(tvList, volume) {
     for (let i = 0; i < elementsNumber; i++) {
         await ll_setVolume(tvList[i], volume);
     }
-}
+};
 
 exports.runApplication = async function(tvList, applicationName) {
     let applicationPackageName = appConfig[applicationName].basic ? appConfig[applicationName].basic : applicationName;
@@ -50,18 +49,18 @@ exports.runApplication = async function(tvList, applicationName) {
     for (let i = 0; i < elementsNumber; i++) {
         await ll_runApplication(tvList[i], applicationPackageName);
     }
-}
+};
 
-exports.killApplication = async function (tvList, applicationName) {
+exports.killApplication = async function(tvList, applicationName) {
     let applicationPackageName = appConfig[applicationName].basic ? appConfig[applicationName].basic : applicationName;
     let elementsNumber = tvList.length;
 
     for (let i = 0; i < elementsNumber; i++) {
         await ll_killApplication(tvList[i], applicationPackageName);
     }
-}
+};
 
-exports.viewPage = async function (tvList, pageUrl, browser) {
+exports.viewPage = async function(tvList, pageUrl, browser) {
     let elementsNumber = tvList.length;
     let customBrowserPackage = false;
 
@@ -78,15 +77,15 @@ exports.viewPage = async function (tvList, pageUrl, browser) {
     for (let i = 0; i < elementsNumber; i++) {
         await ll_viewPage(tvList[i], pageUrl, customBrowserPackage);
     }
-}
+};
 
-exports.runYoutubeMovie = async function (tvList, url) {
+exports.runYoutubeMovie = async function(tvList, url) {
     let elementsNumber = tvList.length;
 
     for (let i = 0; i < elementsNumber; i++) {
         await ll_runYoutubeMovie(tvList[i], url);
     }
-}
+};
 
 function ll_powerSet(tvName, powerState) {
     console.log(`powerSet TV ${ tvName } to state: ${ powerState }`);
@@ -100,7 +99,7 @@ function ll_setVolume(tvName, volume) {
     let sadb = new SimpleADB();
     let ipAddress = config[tvName].ip;
 
-    if(volume < 0 || volume > 100) {
+    if (volume < 0 || volume > 100) {
         volume = 0;
     }
 

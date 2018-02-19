@@ -1,6 +1,5 @@
 const commandLineArgs = require('command-line-args');
 const clu = require('command-line-usage');
-const fs = require('fs');
 
 const actions = require('./actions.js');
 const constants = require('./constants.js');
