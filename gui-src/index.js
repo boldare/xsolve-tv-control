@@ -55,15 +55,11 @@ function deselectAll() {
 }
 
 function powerOn() {
-    return actions.powerSet(getSelectedDevices(), true).then(function() {
-        return refreshDevices();
-    });
+    return actions.powerSet(getSelectedDevices(), true);
 }
 
 function powerOff() {
-    return actions.powerSet(getSelectedDevices(), false).then(function() {
-        return refreshDevices();
-    });
+    return actions.powerSet(getSelectedDevices(), false);
 }
 
 function runYoutubeMovie() {
