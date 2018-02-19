@@ -100,6 +100,10 @@ function ll_setVolume(tvName, volume) {
     let sadb = new SimpleADB();
     let ipAddress = config[tvName].ip;
 
+    if(volume < 0 || volume > 100) {
+        volume = 0;
+    }
+
     console.log(`Setting volume "${ volume }" on "${ tvName }" TV (${ ipAddress }).`);
 
     return sadb

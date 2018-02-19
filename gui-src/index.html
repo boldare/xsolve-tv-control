@@ -61,7 +61,14 @@
                         Actions
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Set Volume</a>
+                            <a
+                                class="dropdown-item"
+                                data-toggle="modal"
+                                data-target="#setVolumeModal"
+                                href="#"
+                            >
+                                Set Volume
+                            </a>
                             <div class="dropdown-divider"></div>
                             <a
                                 class="dropdown-item"
@@ -317,6 +324,58 @@
                             onclick="killApplication()"
                         >
                                 Kill
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- volume modal-->
+        <div
+            class="modal fade"
+            id="setVolumeModal"
+            tabindex="-1"
+            role="dialog"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Set volume</h5>
+                        <button
+                            type="button"
+                            class="close modalCloseButton"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="appName">Volume (0-100)</label>
+                                <input
+                                    class="form-control"
+                                    id="volume_value"
+                                    type="number"
+                                    min="0"
+                                    max="100"
+                                    step="1"
+                                    value="0"
+                                    required
+                                >
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="setVolumeButton"
+                            onclick="setVolume()"
+                        >
+                                Set
                         </button>
                     </div>
                 </div>

@@ -89,11 +89,22 @@ function killApplication() {
     let appName = document.getElementById('kill_appName').value;
     document.getElementById('killApplicationButton').setAttribute('disabled', '');
     console.log('Kill button locked');
-    console.log('app name: ' + appName);
 
     return actions.killApplication(getSelectedDevices(), appName).then(function() {
         document.getElementById('killApplicationButton').removeAttribute('disabled');
         console.log('Kill button unlocked');
+    });
+}
+
+function setVolume() {
+    console.log('setVolume');
+    let value = document.getElementById('volume_value').value;
+    document.getElementById('setVolumeButton').setAttribute('disabled', '');
+    console.log('Set button locked');
+
+    return actions.setVolume(getSelectedDevices(), value).then(function() {
+        document.getElementById('setVolumeButton').removeAttribute('disabled');
+        console.log('Set button unlocked');
     });
 }
 
