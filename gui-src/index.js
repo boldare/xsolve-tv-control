@@ -48,15 +48,15 @@ function powerOff() {
     return actions.powerSet(getSelectedDevices(), false);
 }
 
-
 function runYoutubeMovie() {
     console.log('runYoutubeMovie');
     let url = document.getElementById('youtubeUrl').value;
     document.getElementById('runYoutubeButton').setAttribute('disabled', '');
+    console.log('Run button locked');
 
     return actions.runYoutubeMovie(getSelectedDevices(), url).then(function() {
-        console.log('unlocking Run button');
         document.getElementById('runYoutubeButton').removeAttribute('disabled');
+        console.log('Run button unlocked');
     });
 }
 
