@@ -50,7 +50,7 @@ function powerOff() {
 
 function runYoutubeMovie() {
     console.log('runYoutubeMovie');
-    let url = document.getElementById('youtubeUrl').value;
+    let url = document.getElementById('youtube_url').value;
     document.getElementById('runYoutubeButton').setAttribute('disabled', '');
     console.log('Run button locked');
 
@@ -62,7 +62,7 @@ function runYoutubeMovie() {
 
 function viewPage() {
     console.log('viewPage');
-    let url = document.getElementById('pageUrl').value;
+    let url = document.getElementById('view_pageUrl').value;
     document.getElementById('viewPageButton').setAttribute('disabled', '');
     console.log('View button locked');
 
@@ -74,13 +74,26 @@ function viewPage() {
 
 function runApplication() {
     console.log('runApplication');
-    let url = document.getElementById('appName').value;
+    let appName = document.getElementById('view_appName').value;
     document.getElementById('runApplicationButton').setAttribute('disabled', '');
     console.log('Run button locked');
 
-    return actions.runApplication(getSelectedDevices(), url).then(function() {
+    return actions.runApplication(getSelectedDevices(), appName).then(function() {
         document.getElementById('runApplicationButton').removeAttribute('disabled');
         console.log('Run button unlocked');
+    });
+}
+
+function killApplication() {
+    console.log('killApplication');
+    let appName = document.getElementById('kill_appName').value;
+    document.getElementById('killApplicationButton').setAttribute('disabled', '');
+    console.log('Kill button locked');
+    console.log('app name: ' + appName);
+
+    return actions.killApplication(getSelectedDevices(), appName).then(function() {
+        document.getElementById('killApplicationButton').removeAttribute('disabled');
+        console.log('Kill button unlocked');
     });
 }
 

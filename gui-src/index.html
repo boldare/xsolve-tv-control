@@ -71,7 +71,14 @@
                             >
                                 Run Application
                             </a>
-                            <a class="dropdown-item" href="#">Kill Application<a>
+                            <a
+                                class="dropdown-item"
+                                data-toggle="modal"
+                                data-target="#killApplicationModal"
+                                href="#"
+                            >
+                                Kill Application
+                            <a>
                             <div class="dropdown-divider"></div>
                             <a
                                 class="dropdown-item"
@@ -138,7 +145,7 @@
                                 <input
                                     type="url"
                                     class="form-control"
-                                    id="youtubeUrl"
+                                    id="youtube_url"
                                     placeholder="https://www.youtube.com/watch?v=G1IbRujko-A"
                                 >
                                 <small id="urlHelp" class="form-text text-muted">
@@ -189,7 +196,7 @@
                                 <input
                                     type="url"
                                     class="form-control"
-                                    id="pageUrl"
+                                    id="view_pageUrl"
                                     placeholder="https://4chan.org"
                                 >
                                 <small id="urlHelp" class="form-text text-muted">
@@ -212,7 +219,7 @@
             </div>
         </div>
 
-        <!-- view application -->
+        <!-- view application modal-->
         <div
             class="modal fade"
             id="runApplicationModal"
@@ -239,7 +246,7 @@
                                 <label for="appName">Application name or package name</label>
                                 <input
                                     class="form-control"
-                                    id="appName"
+                                    id="view_appName"
                                     placeholder="opera"
                                 >
                                 <small id="appNameHelp" class="form-text text-muted">
@@ -258,6 +265,58 @@
                             onclick="runApplication()"
                         >
                                 Run
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- kill application modal-->
+        <div
+            class="modal fade"
+            id="killApplicationModal"
+            tabindex="-1"
+            role="dialog"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Kill application</h5>
+                        <button
+                            type="button"
+                            class="close modalCloseButton"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="appName">Application name or package name</label>
+                                <input
+                                    class="form-control"
+                                    id="kill_appName"
+                                    placeholder="opera"
+                                >
+                                <small id="appNameHelp" class="form-text text-muted">
+                                    You may use application name like "opera"
+                                    if defined in appconfig file or package name
+                                    like "com.opera.sdk.example".
+                                </small>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="killApplicationButton"
+                            onclick="killApplication()"
+                        >
+                                Kill
                         </button>
                     </div>
                 </div>
