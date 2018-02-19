@@ -63,50 +63,202 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="#">Set Volume</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Run Application</a>
+                            <a
+                                class="dropdown-item"
+                                data-toggle="modal"
+                                data-target="#runApplicationModal"
+                                href="#"
+                            >
+                                Run Application
+                            </a>
                             <a class="dropdown-item" href="#">Kill Application<a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">View Page</a>
-                            <a class="dropdown-item" data-toggle="modal" data-target="#exampleModal" href="#">View Youtube</a>
+                            <a
+                                class="dropdown-item"
+                                data-toggle="modal"
+                                data-target="#viewPageModal"
+                                href="#"
+                            >
+                                View Page
+                            </a>
+                            <a
+                                class="dropdown-item"
+                                data-toggle="modal"
+                                data-target="#runYoutubeModal"
+                                href="#">
+                                View Youtube
+                            </a>
                         </div>
                     </li>
                 </ul>
             </div>
         </nav>
         <div class="main">
-            <div id="tvList" class="tv-container row justify-content-md-left"> Loading... </div>
+            <div id="tvList" class="tv-container row justify-content-md-left">
+                Loading TV List...
+            </div>
         </div>
         <div class="footer">
             <footer>
                 <script>
-                    document.write(`Node ${ process.versions.node }, Chromium ${ process.versions.chrome }, Electron ${ process.versions.electron }`)
+                    document.write(
+                        `Node ${ process.versions.node },
+                        Chromium ${ process.versions.chrome },
+                        Electron ${ process.versions.electron }`
+                    )
                 </script>
             </footer>
         </div>
 
-        <!-- MODALS -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <!-- youtube modal -->
+        <div
+            class="modal fade"
+            id="runYoutubeModal"
+            tabindex="-1"
+            role="dialog"
+            aria-hidden="true"
+        >
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">View Youtube URL</h5>
-                        <button type="button" class="close modalCloseButton" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <h5 class="modal-title">View Youtube URL</h5>
+                        <button
+                            type="button"
+                            class="close modalCloseButton"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
-                            <label for="exampleInputEmail1">Youtube URL</label>
-                            <input type="url" class="form-control" id="youtubeUrl" placeholder="https://www.youtube.com/watch?v=G1IbRujko-A">
-                            <small id="urlHelp" class="form-text text-muted">You have to enter full youtube URL (with https:// or http://)</small>
+                                <label for="youtubeUrl">Youtube URL</label>
+                                <input
+                                    type="url"
+                                    class="form-control"
+                                    id="youtubeUrl"
+                                    placeholder="https://www.youtube.com/watch?v=G1IbRujko-A"
+                                >
+                                <small id="urlHelp" class="form-text text-muted">
+                                    You have to enter full youtube URL (with https:// or http://)
+                                </small>
                             </div>
-                            <!-- <button type="submit" class="btn btn-primary">Run</button> -->
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-                        <button type="button" class="btn btn-primary" id="runYoutubeButton" onclick="runYoutubeMovie()">Run</button>
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="runYoutubeButton"
+                            onclick="runYoutubeMovie()"
+                        >
+                            Run
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- view page modal -->
+        <div
+            class="modal fade"
+            id="viewPageModal"
+            tabindex="-1"
+            role="dialog"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">View Page</h5>
+                        <button
+                            type="button"
+                            class="close modalCloseButton"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="pageUrl">Page URL</label>
+                                <input
+                                    type="url"
+                                    class="form-control"
+                                    id="pageUrl"
+                                    placeholder="https://4chan.org"
+                                >
+                                <small id="urlHelp" class="form-text text-muted">
+                                    You have to enter full URL (with https:// or http://)
+                                </small>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="viewPageButton"
+                            onclick="viewPage()"
+                        >
+                                View
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- view application -->
+        <div
+            class="modal fade"
+            id="runApplicationModal"
+            tabindex="-1"
+            role="dialog"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Run application</h5>
+                        <button
+                            type="button"
+                            class="close modalCloseButton"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="appName">Application name or package name</label>
+                                <input
+                                    class="form-control"
+                                    id="appName"
+                                    placeholder="opera"
+                                >
+                                <small id="appNameHelp" class="form-text text-muted">
+                                    You may use application name like "opera"
+                                    if defined in appconfig file or package name
+                                    like "com.opera.sdk.example".
+                                </small>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-primary"
+                            id="runApplicationButton"
+                            onclick="runApplication()"
+                        >
+                                Run
+                        </button>
                     </div>
                 </div>
             </div>

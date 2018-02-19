@@ -60,6 +60,30 @@ function runYoutubeMovie() {
     });
 }
 
+function viewPage() {
+    console.log('viewPage');
+    let url = document.getElementById('pageUrl').value;
+    document.getElementById('viewPageButton').setAttribute('disabled', '');
+    console.log('View button locked');
+
+    return actions.viewPage(getSelectedDevices(), url).then(function() {
+        document.getElementById('viewPageButton').removeAttribute('disabled');
+        console.log('View button unlocked');
+    });
+}
+
+function runApplication() {
+    console.log('runApplication');
+    let url = document.getElementById('appName').value;
+    document.getElementById('runApplicationButton').setAttribute('disabled', '');
+    console.log('Run button locked');
+
+    return actions.runApplication(getSelectedDevices(), url).then(function() {
+        document.getElementById('runApplicationButton').removeAttribute('disabled');
+        console.log('Run button unlocked');
+    });
+}
+
 //test only
 
 function getTvPowerState(tvName) {
