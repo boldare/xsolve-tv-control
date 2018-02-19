@@ -11,10 +11,8 @@ function displayDevices() {
     tvListElem.innerHTML = '';
 
     for (var name in tvlistJson) {
-        var powerColorClass = getTvPowerState(name) ? 'power-on': 'power-off';
-
         tvListElem.innerHTML += `
-        <div class="card text-center text-wrap ${powerColorClass}" tv="${ name }">
+        <div class="card text-center text-wrap" tv="${ name }">
             <div class="form-check">
                 <input class="form-check-input position-static checkbox-big" type="checkbox" value="${ name }">
             </div>
@@ -30,8 +28,8 @@ function displayDevices() {
 displayDevices();
 
 function getSelectedDevices() {
-    var array = []
-    var selectedCheckboxes = document.querySelectorAll('input[type=checkbox]:checked');
+    let array = []
+    let selectedCheckboxes = document.querySelectorAll('input[type=checkbox]:checked');
 
     for (var i = 0; i < selectedCheckboxes.length; i++) {
       array.push(selectedCheckboxes[i].value)
@@ -40,12 +38,32 @@ function getSelectedDevices() {
     return array;
 }
 
+function selectAll() {
+    let checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+    for (var i = 0; i < checkboxes.length; i++) {
+      checkboxes[i].checked = true;
+    }
+}
+
+function deselectAll() {
+    let checkboxes = document.querySelectorAll('input[type=checkbox]');
+
+    for (var i = 0; i < checkboxes.length; i++) {
+      checkboxes[i].checked = false;
+    }
+}
+
 function powerOn() {
-    return actions.powerSet(getSelectedDevices(), true);
+    return actions.powerSet(getSelectedDevices(), true).then(function() {
+        return refreshDevices();
+    });
 }
 
 function powerOff() {
-    return actions.powerSet(getSelectedDevices(), false);
+    return actions.powerSet(getSelectedDevices(), false).then(function() {
+        return refreshDevices();
+    });
 }
 
 function runYoutubeMovie() {
@@ -106,11 +124,4 @@ function setVolume() {
         document.getElementById('setVolumeButton').removeAttribute('disabled');
         console.log('Set button unlocked');
     });
-}
-
-//test only
-
-function getTvPowerState(tvName) {
-    var y =Math.random();
-    return y > 0.5 ? true : false;
 }
