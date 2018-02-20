@@ -32,3 +32,11 @@ body {
 .card {
     background-color: #d8d8d8;
 }
+
+.power-on {
+    background-color: green;
+}
+
+.power-off {
+    background-color: red;
+}

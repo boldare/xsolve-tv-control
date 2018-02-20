@@ -7,12 +7,20 @@ const tvlistJson = actions.getTvList();
 
 var tvListElem = document.getElementById('tvList')
 
-function displayDevices() {
+function drawTiles() {
+    let selectedDevices = getSelectedDevices();
+    console.log(selectedDevices)
+
     tvListElem.innerHTML = '';
 
     for (var name in tvlistJson) {
+        console.log(`drawTiles name: ${name}`)
+        var result = await actions.ll_getPowerState(tvList[i])
+        console.log(`drawTiles powerState result: ${result}`);
+        var powerColorClass = actions.getPowerState([name]) ? 'power-on': 'power-off';
+
         tvListElem.innerHTML += `
-        <div class="card text-center text-wrap" tv="${ name }">
+        <div class="card text-center text-wrap ${ powerColorClass }" tv="${ name }">
             <div class="form-check">
                 <input class="form-check-input position-static checkbox-big" type="checkbox" value="${ name }">
             </div>
@@ -23,16 +31,20 @@ function displayDevices() {
         </div>
         `
     }
+
+    for (var i = 0; i < selectedDevices.length; i++) {
+        document.querySelector(`input[value="${selectedDevices[i]}"]`).checked = true;
+    }
 }
 
-displayDevices();
+drawTiles();
 
 function getSelectedDevices() {
     let array = []
     let selectedCheckboxes = document.querySelectorAll('input[type=checkbox]:checked');
 
     for (var i = 0; i < selectedCheckboxes.length; i++) {
-      array.push(selectedCheckboxes[i].value)
+        array.push(selectedCheckboxes[i].value)
     }
 
     return array;
@@ -120,4 +132,11 @@ function setVolume() {
         document.getElementById('setVolumeButton').removeAttribute('disabled');
         console.log('Set button unlocked');
     });
+}
+
+//test only
+
+function getTvPowerState(tvName) {
+    var y =Math.random();
+    return y > 0.5 ? true : false;
 }

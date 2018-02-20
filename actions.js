@@ -10,10 +10,11 @@ exports.getTvList = function() {
 };
 
 exports.getPowerState = async function(tvList) {
+    console.log(`getPowerState: "${tvList}", elements: ${tvList.length}`)
     let elementsNumber = tvList.length;
 
     for (let i = 0; i < elementsNumber; i++) {
-        await ll_getPowerState(tvList[i]);
+        return await ll_getPowerState(tvList[i]);
     }
 };
 
@@ -104,15 +105,24 @@ function ll_powerSet(tvName, powerState) {
 }
 
 function ll_getPowerState(tvName) {
+    console.log(`getPowerState for "${ tvName }" TV`);
+
     let sadb = new SimpleADB();
     let ipAddress = config[tvName].ip;
-    
+
     return sadb
         .connect(ipAddress)
         .then(function() {
             return sadb.execAdbShellCommandAndCaptureOutput(['dumpsys power|grep "Display Power"'])
                 .then(function(output) {
-                    console.log(`TV ${ tvName } state: ${ output }`);
+                    if(output == "Display Power: state=ON") {
+                        console.log(`TV ${ tvName } state: TRUE`);
+                        return true;
+                    }
+
+                    console.log(`TV ${ tvName } state: FALSE`);
+
+                    return false;
                 });
         })
         .catch((e) => {
