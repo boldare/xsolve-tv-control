@@ -44,6 +44,12 @@ for (let i = 0; i < tvList.length; i++) {
     }
 }
 
+if (cliOptions.state) {
+    actions.getPowerState(tvList).then(function() {
+        process.exit(0);
+    });
+}
+
 if (cliOptions.poweron || cliOptions.poweroff) {
     actions.powerSet(tvList, cliOptions.poweron ? true : false).then(function() {
         process.exit(0);

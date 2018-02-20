@@ -9,6 +9,14 @@ exports.getTvList = function() {
     return config;
 };
 
+exports.getPowerState = async function(tvList) {
+    let elementsNumber = tvList.length;
+
+    for (let i = 0; i < elementsNumber; i++) {
+        await ll_getPowerState(tvList[i]);
+    }
+};
+
 exports.powerSet = function(tvList, powerState) {
     console.log(tvList);
     return new Promise(function(resolve, reject) {
@@ -93,6 +101,24 @@ function ll_powerSet(tvName, powerState) {
     let tvConfig = config[tvName];
 
     return new BraviaRemoteControl(tvConfig.ip, 80, tvConfig.key).sendAction(powerState ? 'PowerOn' : 'PowerOff');
+}
+
+function ll_getPowerState(tvName) {
+    let sadb = new SimpleADB();
+    let ipAddress = config[tvName].ip;
+    
+    return sadb
+        .connect(ipAddress)
+        .then(function() {
+            return sadb.execAdbShellCommandAndCaptureOutput(['dumpsys power|grep "Display Power"'])
+                .then(function(output) {
+                    console.log(`TV ${ tvName } state: ${ output }`);
+                });
+        })
+        .catch((e) => {
+            console.log('ll_getPowerState failed - retrying');
+            return ll_getPowerState(tvName);
+        });
 }
 
 function ll_setVolume(tvName, volume) {

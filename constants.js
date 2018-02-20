@@ -28,6 +28,10 @@ module.exports = {
                     description: 'Displays available TVs',
                 },
                 {
+                    name: 'state',
+                    description: 'Displays TVs power state',
+                },
+                {
                     name: 'tv',
                     description: 'Selects specific TV. All may be selected using --all option',
                 },
@@ -77,7 +81,12 @@ module.exports = {
             type: Number,
         },
         {
-            name: 'list', type: Boolean,
+            name: 'list',
+            type: Boolean,
+        },
+        {
+            name: 'state',
+            type: Boolean,
         },
         {
             name: 'tv',
