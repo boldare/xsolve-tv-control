@@ -4,6 +4,7 @@ const BrowserWindow = electron.remote.BrowserWindow
 
 const actions = require('../actions.js');
 const tvList = actions.getTvList();
+const tileAutoRefreshTime = 10000;
 
 let tvPowerState = [];
 let tvListElem = document.getElementById('tvList')
@@ -34,6 +35,7 @@ function drawTiles() {
     }
 
     refreshTilesState();
+    setInterval(refreshTilesState, tileAutoRefreshTime);
 }
 
 async function refreshTilesState() {
@@ -98,11 +100,15 @@ function deselectAll() {
 }
 
 function powerOn() {
-    return actions.powerSet(getSelectedDevices(), true);
+    return actions.powerSet(getSelectedDevices(), true).then(function() {
+        return refreshTilesState();
+    });
 }
 
 function powerOff() {
-    return actions.powerSet(getSelectedDevices(), false);
+    return actions.powerSet(getSelectedDevices(), false).then(function() {
+        return refreshTilesState();
+    });
 }
 
 function runYoutubeMovie() {
