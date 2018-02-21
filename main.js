@@ -24,7 +24,7 @@ function createWindow() {
     }));
 
     // win.setFullScreen(true);
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools();
 
     win.on('closed', () => {
         win = null;
