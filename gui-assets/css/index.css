@@ -33,10 +33,25 @@ body {
     background-color: #d8d8d8;
 }
 
-.power-on {
-    background-color: green;
+.dot {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  display: inline-block;
 }
 
-.power-off {
+[power=power-on] {
+    background-color: #79d879;
+}
+
+[power=power-off] {
+    background-color: #848484;
+}
+
+[power=power-failed] {
     background-color: red;
+}
+
+[power=power-unknown] {
+    background-color: #a5a5a5;
 }

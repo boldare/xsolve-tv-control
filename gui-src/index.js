@@ -3,30 +3,26 @@ const path = require('path')
 const BrowserWindow = electron.remote.BrowserWindow
 
 const actions = require('../actions.js');
-const tvlistJson = actions.getTvList();
+const tvListJson = actions.getTvList();
 
-var tvListElem = document.getElementById('tvList')
+let tvPowerState = [];
+let tvListElem = document.getElementById('tvList')
+
 
 function drawTiles() {
     let selectedDevices = getSelectedDevices();
-    console.log(selectedDevices)
-
     tvListElem.innerHTML = '';
 
-    for (var name in tvlistJson) {
-        console.log(`drawTiles name: ${name}`)
-        var result = await actions.ll_getPowerState(tvList[i])
-        console.log(`drawTiles powerState result: ${result}`);
-        var powerColorClass = actions.getPowerState([name]) ? 'power-on': 'power-off';
-
+    for (var name in tvListJson) {
         tvListElem.innerHTML += `
-        <div class="card text-center text-wrap ${ powerColorClass }" tv="${ name }">
+        <div class="card text-center text-wrap" tv="${ name }">
             <div class="form-check">
                 <input class="form-check-input position-static checkbox-big" type="checkbox" value="${ name }">
             </div>
             <div class="card-body col align-self-end">
                     <h4 class="card-title" id="name">${ name }</h4>
-                    <p class="card-text">${ tvlistJson[name].ip } <br /> ${ tvlistJson[name].mac }</p>
+                    <p class="card-text">${ tvListJson[name].ip } <br /> ${ tvListJson[name].mac }</p>
+                    <span class="dot" tv="${ name }" power="power-unknown"></span>
             </div>
         </div>
         `
@@ -35,9 +31,44 @@ function drawTiles() {
     for (var i = 0; i < selectedDevices.length; i++) {
         document.querySelector(`input[value="${selectedDevices[i]}"]`).checked = true;
     }
+
+    refreshTilesState();
+}
+
+async function refreshTilesState() {
+    await getDevicesPowerState();
+
+    for (var name in tvListJson) {
+        console.log(`refreshTilesState name: ${name}`)
+        document.querySelector(`span[tv="${name}"]`).setAttribute("power", `power-${tvPowerState[name]}`);
+    }
 }
 
 drawTiles();
+
+function getDevicesPowerState() {
+    console.log('getDevicesPowerState');
+
+    return new Promise(function(resolve, reject) {
+        let elementsNumber = Object.keys(tvListJson).length;
+        let promiseArray = [];
+
+        for (let i = 0; i < elementsNumber; i++) {
+            let tvName = Object.keys(tvListJson)[i];
+            console.log('for tvName: ' + tvName);
+            promiseArray.push(actions.ll_getPowerState(tvName));
+        }
+
+        Promise.all(promiseArray).then(function(result) {
+            for (let i = 0; i < elementsNumber; i++) {
+                let tvName = Object.keys(tvListJson)[i];
+                tvPowerState[tvName] = result[i];
+            }
+
+            resolve(true);
+        });
+    });
+}
 
 function getSelectedDevices() {
     let array = []
@@ -47,6 +78,7 @@ function getSelectedDevices() {
         array.push(selectedCheckboxes[i].value)
     }
 
+    console.log(`getSelectedDevices: "${ array }"`);
     return array;
 }
 

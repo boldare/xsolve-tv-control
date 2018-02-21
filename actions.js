@@ -4,8 +4,6 @@ const SimpleADB = require('simple-adb').SimpleADB;
 const config = require('./tvconfig.json');
 const appConfig = require('./appconfig.json');
 
-let limit = 10;
-
 exports.getTvList = function() {
     return config;
 };
@@ -42,7 +40,7 @@ exports.getPowerState = async function(tvList) {
     let elementsNumber = tvList.length;
 
     for (let i = 0; i < elementsNumber; i++) {
-        return await ll_getPowerState(tvList[i]);
+        return await this.ll_getPowerState(tvList[i]);
     }
 };
 
@@ -94,7 +92,7 @@ function ll_powerSet(tvName, powerState) {
     return new BraviaRemoteControl(tvConfig.ip, 80, tvConfig.key).sendAction(powerState ? 'PowerOn' : 'PowerOff');
 }
 
-function ll_getPowerState(tvName) {
+exports.ll_getPowerState = async function(tvName) {
     console.log(`getPowerState for "${ tvName }" TV`);
 
     let sadb = new SimpleADB();
@@ -107,24 +105,18 @@ function ll_getPowerState(tvName) {
                 .then(function(output) {
                     if(output == "Display Power: state=ON") {
                         console.log(`TV ${ tvName } state: TRUE`);
-                        return true;
+                        return 'on';
                     }
 
                     console.log(`TV ${ tvName } state: FALSE`);
 
-                    return false;
+                    return 'off';
                 });
         })
         .catch((e) => {
             console.log('ll_getPowerState failed');
 
-            if(limit--) {
-                console.log('retrying');
-
-                return ll_getPowerState(tvName);
-            }
-
-            throw 'Rerty limit exceded';
+            return 'failed';
         });
 }
 
@@ -145,14 +137,6 @@ function ll_setVolume(tvName, volume) {
         })
         .catch((e) => {
             console.log('ll_setVolume failed');
-
-            if(limit--) {
-                console.log('retrying');
-
-                return ll_setVolume(tvName, volume);
-            }
-
-            throw 'Rerty limit exceded';
         });
 }
 
@@ -173,14 +157,6 @@ function ll_viewPage(tvName, pageUrl, customBrowserPackage) {
         })
         .catch((e) => {
             console.log('ll_viewPage failed');
-
-            if(limit--) {
-                console.log('retrying');
-
-                return ll_viewPage(tvName, pageUrl, customBrowserPackage);
-            }
-
-            throw 'Rerty limit exceded';
         });
 }
 
@@ -197,14 +173,6 @@ function ll_runApplication(tvName, applicationPackageName) {
         })
         .catch((e) => {
             console.log('ll_runApplication failed');
-
-            if(limit--) {
-                console.log('retrying');
-
-                return ll_runApplication(tvName, applicationPackageName);
-            }
-
-            throw 'Rerty limit exceded';
         });
 }
 
@@ -221,14 +189,6 @@ function ll_killApplication(tvName, applicationPackageName) {
         })
         .catch((e) => {
             console.log('ll_killApplication failed');
-
-            if(limit--) {
-                console.log('retrying');
-
-                return ll_killApplication(tvName, applicationPackageName);
-            }
-
-            throw 'Rerty limit exceded';
         });
 }
 
@@ -245,13 +205,5 @@ function ll_runYoutubeMovie(tvName, url) {
         })
         .catch((e) => {
             console.log('ll_runYoutubeMovie failed');
-
-            if(limit--) {
-                console.log('retrying');
-
-                return ll_runYoutubeMovie(tvName, url);
-            }
-
-            throw 'Rerty limit exceded';
         });
 }
