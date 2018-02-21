@@ -6,6 +6,10 @@ Simple CLI APP for remote TV (Sony Bravia with Android TV) control.
 Node 8.X is needed to run script. In case of Ubuntu you can install it using:
 `curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -`
 `sudo apt-get install -y nodejs`
+## ADB
+ADB is needed to execute ADB actions. In case of Ubuntu you can install it using:
+`sudo apt-get install adb`
+
 ## TV
 ### Visibility
 TV must be visible (pingable) from the PC.
