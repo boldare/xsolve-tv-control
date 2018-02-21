@@ -8,8 +8,8 @@ exports.getTvList = function() {
     return config;
 };
 
-resolveTVsCommand = function(func, args) {
-    var [tvList, ...other] = args;
+function resolveTVsCommand(func, args) {
+    let [tvList, ...other] = args;
 
     return new Promise(function(resolve, reject) {
         let elementsNumber = tvList.length;
@@ -40,7 +40,8 @@ exports.getPowerState = async function(tvList) {
     let elementsNumber = tvList.length;
 
     for (let i = 0; i < elementsNumber; i++) {
-        return await this.ll_getPowerState(tvList[i]);
+        console.log(`i: ${i}`)
+        await this.ll_getPowerState(tvList[i]);
     }
 };
 
@@ -77,7 +78,7 @@ exports.viewPage = function(tvList, pageUrl, browser) {
         }
     }
 
-    return resolveTVsCommand(ll_viewPage, [pageUrl, customBrowserPackage]);
+    return resolveTVsCommand(ll_viewPage, [tvList, pageUrl, customBrowserPackage]);
 };
 
 exports.runYoutubeMovie = function(tvList, url) {
@@ -103,7 +104,7 @@ exports.ll_getPowerState = async function(tvName) {
         .then(function() {
             return sadb.execAdbShellCommandAndCaptureOutput(['dumpsys power|grep "Display Power"'])
                 .then(function(output) {
-                    if(output == "Display Power: state=ON") {
+                    if (output == 'Display Power: state=ON') {
                         console.log(`TV ${ tvName } state: TRUE`);
                         return 'on';
                     }
@@ -118,7 +119,7 @@ exports.ll_getPowerState = async function(tvName) {
 
             return 'failed';
         });
-}
+};
 
 function ll_setVolume(tvName, volume) {
     let sadb = new SimpleADB();

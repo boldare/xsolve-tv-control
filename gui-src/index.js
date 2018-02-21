@@ -3,17 +3,18 @@ const path = require('path')
 const BrowserWindow = electron.remote.BrowserWindow
 
 const actions = require('../actions.js');
-const tvListJson = actions.getTvList();
+const tvList = actions.getTvList();
 
 let tvPowerState = [];
 let tvListElem = document.getElementById('tvList')
 
+drawTiles();
 
 function drawTiles() {
     let selectedDevices = getSelectedDevices();
     tvListElem.innerHTML = '';
 
-    for (var name in tvListJson) {
+    for (var name in tvList) {
         tvListElem.innerHTML += `
         <div class="card text-center text-wrap" tv="${ name }">
             <div class="form-check">
@@ -21,7 +22,7 @@ function drawTiles() {
             </div>
             <div class="card-body col align-self-end">
                     <h4 class="card-title" id="name">${ name }</h4>
-                    <p class="card-text">${ tvListJson[name].ip } <br /> ${ tvListJson[name].mac }</p>
+                    <p class="card-text">${ tvList[name].ip } <br /> ${ tvList[name].mac }</p>
                     <span class="dot" tv="${ name }" power="power-unknown"></span>
             </div>
         </div>
@@ -38,30 +39,28 @@ function drawTiles() {
 async function refreshTilesState() {
     await getDevicesPowerState();
 
-    for (var name in tvListJson) {
+    for (var name in tvList) {
         console.log(`refreshTilesState name: ${name}`)
         document.querySelector(`span[tv="${name}"]`).setAttribute("power", `power-${tvPowerState[name]}`);
     }
 }
 
-drawTiles();
-
 function getDevicesPowerState() {
     console.log('getDevicesPowerState');
 
     return new Promise(function(resolve, reject) {
-        let elementsNumber = Object.keys(tvListJson).length;
+        let elementsNumber = Object.keys(tvList).length;
         let promiseArray = [];
 
         for (let i = 0; i < elementsNumber; i++) {
-            let tvName = Object.keys(tvListJson)[i];
+            let tvName = Object.keys(tvList)[i];
             console.log('for tvName: ' + tvName);
             promiseArray.push(actions.ll_getPowerState(tvName));
         }
 
         Promise.all(promiseArray).then(function(result) {
             for (let i = 0; i < elementsNumber; i++) {
-                let tvName = Object.keys(tvListJson)[i];
+                let tvName = Object.keys(tvList)[i];
                 tvPowerState[tvName] = result[i];
             }
 
@@ -164,11 +163,4 @@ function setVolume() {
         document.getElementById('setVolumeButton').removeAttribute('disabled');
         console.log('Set button unlocked');
     });
-}
-
-//test only
-
-function getTvPowerState(tvName) {
-    var y =Math.random();
-    return y > 0.5 ? true : false;
 }

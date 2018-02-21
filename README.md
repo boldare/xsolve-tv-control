@@ -1,19 +1,23 @@
 # About
-Simple CLI APP for remote TV (Sony Bravia with Android TV) control.
+APP for remote TV control (currently Sony Bravia with Android TV). It's possible to use it using GUI (electron) or CLI.
 
 # Requirements
+
 ## Node 8.X
 Node 8.X is needed to run script. In case of Ubuntu you can install it using:
 `curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -`
 `sudo apt-get install -y nodejs`
+
 ## ADB
 ADB is needed to execute ADB actions. In case of Ubuntu you can install it using:
 `sudo apt-get install adb`
 
 ## TV
+
 ### Visibility
 TV must be visible (pingable) from the PC.
 `ping some_tv_ip`
+
 ### Remote control
 Remote control must be enabled on the TV and key must be set.
 Go to `Settings` -> `Network` -> `Home network setup` -> `IP control`.
@@ -26,7 +30,18 @@ ADB debugging must be enabled.
 Open `Settings` -> `About` and click multiple times on `Build informations` in .
 Go to `Settings` -> `Developer options` and enable `ADB debugging`.
 
-# Usage
+# Configuration
+
+## TV list
+TVs must be configured in `tvconfig.json` file - dist config `tvconfig-dist.json` is available.
+
+# Building / running
+Just install dependencies:
+`npm install`
+
+You can now run CLI version using: `node tv-cli.js` or GUI version: `npx electron .`
+
+# Usage (CLI)
 
 ## Help
 Help may be displayed using `--help` option.
@@ -51,6 +66,10 @@ You can turn on selected TV/TVs using `--poweron` option.
 ## Turn off
 You can turn off selected TV/TVs using `--poweroff` option.
 `node tv-cli.js --tv "tv name 1" --poweroff`
+
+## Power state
+You can check current power state (on/off) using `--state` option.
+`node tv-cli.js --tv "tv name 1" --state`
 
 ## Run application
 You can run specified application using --run option.
