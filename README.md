@@ -53,6 +53,7 @@ Displays available TVs (set in tvconfig.json).
 
 ## Select TV
 It's possible to select specific TV or TVs using `--tv` option.
+
 `node tv-cli.js --tv "tv name 1"`
 `node tv-cli.js --tv "tv name 1" "tv name 2"`
 
