@@ -8,7 +8,7 @@
         "command-line-usage": "^4.1.0",
         "electron": "^1.8.2",
         "jquery": "^3.3.1",
-        "simple-adb": "^1.7.8",
+        "simple-adb": "git+https://github.com/tomko222/SimpleADB.git#parallel-execution-built",
         "sony-bravia-tv-remote": "^2.0.0"
     },
     "devDependencies": {
