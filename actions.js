@@ -4,13 +4,15 @@ const SimpleADB = require('simple-adb').SimpleADB;
 const config = require('./tvconfig.json');
 const appConfig = require('./appconfig.json');
 
+let limit = 10;
 
 exports.getTvList = function() {
     return config;
 };
 
-exports.powerSet = function(tvList, powerState) {
-    console.log(tvList);
+resolveTVsCommand = function(func, args) {
+    var [tvList, ...other] = args;
+
     return new Promise(function(resolve, reject) {
         let elementsNumber = tvList.length;
         let promiseArray = [];
@@ -18,7 +20,7 @@ exports.powerSet = function(tvList, powerState) {
         for (let i = 0; i < elementsNumber; i++) {
             let tvName = tvList[i];
             console.log('for tvName: ' + tvName);
-            promiseArray.push(ll_powerSet(tvName, powerState));
+            promiseArray.push(func(tvName, ...other));
         }
 
         Promise.all(promiseArray).then(function(result) {
@@ -32,36 +34,29 @@ exports.powerSet = function(tvList, powerState) {
             resolve(true);
         });
     });
+}
+
+exports.powerSet = function(tvList, powerState) {
+    return resolveTVsCommand(ll_powerSet, [tvList, powerState]);
 };
 
-exports.setVolume = async function setVolume(tvList, volume) {
-    let elementsNumber = tvList.length;
-
-    for (let i = 0; i < elementsNumber; i++) {
-        await ll_setVolume(tvList[i], volume);
-    }
+exports.setVolume = function setVolume(tvList, volume) {
+    return resolveTVsCommand(ll_setVolume, [tvList, volume]);
 };
 
-exports.runApplication = async function(tvList, applicationName) {
+exports.runApplication = function(tvList, applicationName) {
     let applicationPackageName = appConfig[applicationName].basic ? appConfig[applicationName].basic : applicationName;
-    let elementsNumber = tvList.length;
 
-    for (let i = 0; i < elementsNumber; i++) {
-        await ll_runApplication(tvList[i], applicationPackageName);
-    }
+    return resolveTVsCommand(ll_runApplication, [tvList, applicationPackageName]);
 };
 
-exports.killApplication = async function(tvList, applicationName) {
+exports.killApplication = function(tvList, applicationName) {
     let applicationPackageName = appConfig[applicationName].basic ? appConfig[applicationName].basic : applicationName;
-    let elementsNumber = tvList.length;
 
-    for (let i = 0; i < elementsNumber; i++) {
-        await ll_killApplication(tvList[i], applicationPackageName);
-    }
+    return resolveTVsCommand(ll_killApplication, [tvList, applicationPackageName]);
 };
 
-exports.viewPage = async function(tvList, pageUrl, browser) {
-    let elementsNumber = tvList.length;
+exports.viewPage = function(tvList, pageUrl, browser) {
     let customBrowserPackage = false;
 
     if (browser) {
@@ -74,17 +69,11 @@ exports.viewPage = async function(tvList, pageUrl, browser) {
         }
     }
 
-    for (let i = 0; i < elementsNumber; i++) {
-        await ll_viewPage(tvList[i], pageUrl, customBrowserPackage);
-    }
+    return resolveTVsCommand(ll_viewPage, [pageUrl, customBrowserPackage]);
 };
 
-exports.runYoutubeMovie = async function(tvList, url) {
-    let elementsNumber = tvList.length;
-
-    for (let i = 0; i < elementsNumber; i++) {
-        await ll_runYoutubeMovie(tvList[i], url);
-    }
+exports.runYoutubeMovie = function(tvList, url) {
+    return resolveTVsCommand(ll_runYoutubeMovie, [tvList, url]);
 };
 
 function ll_powerSet(tvName, powerState) {
@@ -111,8 +100,15 @@ function ll_setVolume(tvName, volume) {
             return sadb.execAdbShellCommand(`service call audio 3 i32 3 i32 ${ volume } i32 1`); // audio output 3
         })
         .catch((e) => {
-            console.log('ll_setVolume failed - retrying');
-            return ll_setVolume(tvName, volume);
+            console.log('ll_setVolume failed');
+
+            if(limit--) {
+                console.log('retrying');
+
+                return ll_setVolume(tvName, volume);
+            }
+
+            throw 'Rerty limit exceded';
         });
 }
 
@@ -132,8 +128,15 @@ function ll_viewPage(tvName, pageUrl, customBrowserPackage) {
             return sadb.execAdbShellCommand(`am start -a android.intent.action.VIEW "${ pageUrl }"`);// default browser
         })
         .catch((e) => {
-            console.log('ll_viewPage failed - retrying');
-            return ll_viewPage(tvName, pageUrl, customBrowserPackage);
+            console.log('ll_viewPage failed');
+
+            if(limit--) {
+                console.log('retrying');
+
+                return ll_viewPage(tvName, pageUrl, customBrowserPackage);
+            }
+
+            throw 'Rerty limit exceded';
         });
 }
 
@@ -149,8 +152,15 @@ function ll_runApplication(tvName, applicationPackageName) {
             return sadb.execAdbShellCommand(`monkey -p ${ applicationPackageName } -c android.intent.category.LAUNCHER 1`);
         })
         .catch((e) => {
-            console.log('ll_runApplication failed - retrying');
-            return ll_runApplication(tvName, applicationPackageName);
+            console.log('ll_runApplication failed');
+
+            if(limit--) {
+                console.log('retrying');
+
+                return ll_runApplication(tvName, applicationPackageName);
+            }
+
+            throw 'Rerty limit exceded';
         });
 }
 
@@ -166,8 +176,15 @@ function ll_killApplication(tvName, applicationPackageName) {
             return sadb.execAdbShellCommand(`am force-stop ${ applicationPackageName }`);
         })
         .catch((e) => {
-            console.log('ll_killApplication failed - retrying');
-            return ll_killApplication(tvName, applicationPackageName);
+            console.log('ll_killApplication failed');
+
+            if(limit--) {
+                console.log('retrying');
+
+                return ll_killApplication(tvName, applicationPackageName);
+            }
+
+            throw 'Rerty limit exceded';
         });
 }
 
@@ -183,7 +200,14 @@ function ll_runYoutubeMovie(tvName, url) {
             return sadb.execAdbShellCommand(`am start -a android.intent.action.VIEW "${ url }"`);
         })
         .catch((e) => {
-            console.log('ll_runYoutubeMovie failed - retrying');
-            return ll_runYoutubeMovie(tvName, url);
+            console.log('ll_runYoutubeMovie failed');
+
+            if(limit--) {
+                console.log('retrying');
+
+                return ll_runYoutubeMovie(tvName, url);
+            }
+
+            throw 'Rerty limit exceded';
         });
 }
