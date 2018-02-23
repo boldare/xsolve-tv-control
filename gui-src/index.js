@@ -25,11 +25,9 @@ function drawTiles() {
             <div class="card-body col align-self-center">
                     <h4 class="card-title card-short-name" id="name" title="${ name }">${ name }</h4>
                     <p class="card-text">${ tvList[name].ip } <br /> ${ tvList[name].mac }</p>
-            </div>
-            <div class="card-body col align-self-end">
                     <span class="dot" tv="${ name }" power="power-unknown"></span>
                     <p>
-                    <img class="screen" tv="${ name }" />
+                    <img class="screen" tv="${ name }" src="../gui-assets/images/screen-not-updated.png"/>
                     </p>
             </div>
         </div>
@@ -39,18 +37,29 @@ function drawTiles() {
 
 async function refreshTilesState() {
     await getDevicesPowerState();
+    var poweredOnList = [];
 
     for (var name in tvList) {
-        console.log(`Refreshing power state: ${name}`)
-        document.querySelector(`span[class="dot"][tv="${name}"]`)
+        console.log(`Refreshing power state: ${ name }`)
+        document.querySelector(`span[class="dot"][tv="${ name }"]`)
             .setAttribute("power", `power-${tvPowerState[name]}`);
+
+        if(tvPowerState[name] == 'on') {
+            document.querySelector(`img[class="screen"][tv="${ name }"]`)
+                .setAttribute("src", `../gui-assets/images/screen-updating.png`);
+            poweredOnList.push(name);
+        } else {
+            document.querySelector(`img[class="screen"][tv="${ name }"]`)
+                .setAttribute("src", `../gui-assets/images/screen-off.png`);
+        }
     }
 
-    await getDevicesScreenshots();
+    await getDevicesScreenshots(poweredOnList);
 
-    for (var name in tvList) {
-        console.log(`Refreshing screenshot state: ${name}`)
-        document.querySelector(`img[class="screen"][tv="${name}"]`)
+    for (let i = 0; i <  poweredOnList.length; i++) {
+        let name = poweredOnList[i];
+        console.log(`Refreshing screenshot state: ${ name }`)
+        document.querySelector(`img[class="screen"][tv="${ name }"]`)
             .setAttribute("src", tvScreenshots[name]);
     }
 }
@@ -79,22 +88,22 @@ function getDevicesPowerState() {
     });
 }
 
-function getDevicesScreenshots() {
+function getDevicesScreenshots(poweredOnList) {
     console.log('getDevicesScreenshots');
 
     return new Promise(function(resolve, reject) {
-        let elementsNumber = Object.keys(tvList).length;
+        let elementsNumber = Object.keys(poweredOnList).length;
         let promiseArray = [];
 
         for (let i = 0; i < elementsNumber; i++) {
-            let tvName = Object.keys(tvList)[i];
+            let tvName = poweredOnList[i];
             console.log('for tvName: ' + tvName);
             promiseArray.push(actions.ll_getRawScreenshot(tvName));
         }
 
         Promise.all(promiseArray).then(function(result) {
             for (let i = 0; i < elementsNumber; i++) {
-                let tvName = Object.keys(tvList)[i];
+                let tvName = poweredOnList[i];
                 tvScreenshots[tvName] = `data:image/png;charset=utf-8;base64,${ result[i] }`;
             }
 

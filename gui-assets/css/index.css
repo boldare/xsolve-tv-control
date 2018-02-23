@@ -43,6 +43,7 @@ body {
 .screen {
     width: 100%;
     height: auto;
+    border: solid 1px #8c8c8c;
 }
 
 .card-short-name {
