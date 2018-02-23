@@ -27,7 +27,7 @@ function drawTiles() {
                     <p class="card-text">${ tvList[name].ip } <br /> ${ tvList[name].mac }</p>
                     <span class="dot" tv="${ name }" power="power-unknown"></span>
                     <p>
-                    <img class="screen rounded" tv="${ name }" src="../gui-assets/images/screen-not-updated.png"/>
+                    <img class="screen img-thumbnail" tv="${ name }" src="../gui-assets/images/screen-not-updated.png"/>
                     </p>
             </div>
         </div>
