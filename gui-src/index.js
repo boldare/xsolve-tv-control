@@ -7,6 +7,7 @@ const tvList = actions.getTvList();
 const tileAutoRefreshTime = 10000;
 
 let tvPowerState = [];
+let tvScreenshots = [];
 let tvListElem = document.getElementById('tvList')
 
 drawTiles();
@@ -21,29 +22,36 @@ function drawTiles() {
             <div class="form-check">
                 <input class="form-check-input position-static checkbox-big" type="checkbox" value="${ name }">
             </div>
-            <div class="card-body col align-self-end">
+            <div class="card-body col align-self-center">
                     <h4 class="card-title" id="name">${ name }</h4>
                     <p class="card-text">${ tvList[name].ip } <br /> ${ tvList[name].mac }</p>
+            </div>
+            <div class="card-body col align-self-end">
                     <span class="dot" tv="${ name }" power="power-unknown"></span>
+                    <p>
+                    <img class="screen" tv="${ name }" />
+                    </p>
             </div>
         </div>
         `
     }
-
-    for (var i = 0; i < selectedDevices.length; i++) {
-        document.querySelector(`input[value="${selectedDevices[i]}"]`).checked = true;
-    }
-
-    refreshTilesState();
-    setInterval(refreshTilesState, tileAutoRefreshTime);
 }
 
 async function refreshTilesState() {
     await getDevicesPowerState();
 
     for (var name in tvList) {
-        console.log(`refreshTilesState name: ${name}`)
-        document.querySelector(`span[tv="${name}"]`).setAttribute("power", `power-${tvPowerState[name]}`);
+        console.log(`Refreshing power state: ${name}`)
+        document.querySelector(`span[class="dot"][tv="${name}"]`)
+            .setAttribute("power", `power-${tvPowerState[name]}`);
+    }
+
+    await getDevicesScreenshots();
+
+    for (var name in tvList) {
+        console.log(`Refreshing screenshot state: ${name}`)
+        document.querySelector(`img[class="screen"][tv="${name}"]`)
+            .setAttribute("src", tvScreenshots[name]);
     }
 }
 
@@ -64,6 +72,30 @@ function getDevicesPowerState() {
             for (let i = 0; i < elementsNumber; i++) {
                 let tvName = Object.keys(tvList)[i];
                 tvPowerState[tvName] = result[i];
+            }
+
+            resolve(true);
+        });
+    });
+}
+
+function getDevicesScreenshots() {
+    console.log('getDevicesScreenshots');
+
+    return new Promise(function(resolve, reject) {
+        let elementsNumber = Object.keys(tvList).length;
+        let promiseArray = [];
+
+        for (let i = 0; i < elementsNumber; i++) {
+            let tvName = Object.keys(tvList)[i];
+            console.log('for tvName: ' + tvName);
+            promiseArray.push(actions.ll_getRawScreenshot(tvName));
+        }
+
+        Promise.all(promiseArray).then(function(result) {
+            for (let i = 0; i < elementsNumber; i++) {
+                let tvName = Object.keys(tvList)[i];
+                tvScreenshots[tvName] = `data:image/png;charset=utf-8;base64,${ result[i] }`;
             }
 
             resolve(true);

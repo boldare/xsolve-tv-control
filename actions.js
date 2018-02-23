@@ -121,6 +121,24 @@ exports.ll_getPowerState = async function(tvName) {
         });
 };
 
+exports.ll_getRawScreenshot = async function(tvName) {
+    let sadb = new SimpleADB();
+    let ipAddress = config[tvName].ip;
+
+    console.log(`ll_getRawScreenthot`);
+
+    return sadb
+        .connect(ipAddress)
+        .then(function() {
+            return sadb.execAdbShellCommandAndCaptureOutput(['screencap -p |base64']).then(function(output) {
+                return output.join('');//lines must be joined and without "," signs
+            });
+        })
+        .catch((e) => {
+            console.log('ll_getRawScreenthot failed');
+        });
+};
+
 function ll_setVolume(tvName, volume) {
     let sadb = new SimpleADB();
     let ipAddress = config[tvName].ip;
