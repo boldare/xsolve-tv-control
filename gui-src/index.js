@@ -18,12 +18,12 @@ function drawTiles() {
 
     for (var name in tvList) {
         tvListElem.innerHTML += `
-        <div class="card text-center text-wrap" tv="${ name }">
+        <div class="card text-center" tv="${ name }">
             <div class="form-check">
                 <input class="form-check-input position-static checkbox-big" type="checkbox" value="${ name }">
             </div>
             <div class="card-body col align-self-center">
-                    <h4 class="card-title" id="name">${ name }</h4>
+                    <h4 class="card-title card-short-name" id="name" title="${ name }">${ name }</h4>
                     <p class="card-text">${ tvList[name].ip } <br /> ${ tvList[name].mac }</p>
             </div>
             <div class="card-body col align-self-end">

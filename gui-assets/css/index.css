@@ -45,6 +45,12 @@ body {
     height: auto;
 }
 
+.card-short-name {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
 [power=power-on] {
     background-color: #79d879;
 }
