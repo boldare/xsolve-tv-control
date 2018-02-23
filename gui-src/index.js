@@ -27,7 +27,7 @@ function drawTiles() {
                     <p class="card-text">${ tvList[name].ip } <br /> ${ tvList[name].mac }</p>
                     <span class="dot" tv="${ name }" power="power-unknown"></span>
                     <p>
-                    <img class="screen" tv="${ name }" src="../gui-assets/images/screen-not-updated.png"/>
+                    <img class="screen rounded" tv="${ name }" src="../gui-assets/images/screen-not-updated.png"/>
                     </p>
             </div>
         </div>
@@ -45,11 +45,11 @@ async function refreshTilesState() {
             .setAttribute("power", `power-${tvPowerState[name]}`);
 
         if(tvPowerState[name] == 'on') {
-            document.querySelector(`img[class="screen"][tv="${ name }"]`)
+            document.querySelector(`img[class*="screen"][tv="${ name }"]`)
                 .setAttribute("src", `../gui-assets/images/screen-updating.png`);
             poweredOnList.push(name);
         } else {
-            document.querySelector(`img[class="screen"][tv="${ name }"]`)
+            document.querySelector(`img[class*="screen"][tv="${ name }"]`)
                 .setAttribute("src", `../gui-assets/images/screen-off.png`);
         }
     }
@@ -59,7 +59,7 @@ async function refreshTilesState() {
     for (let i = 0; i <  poweredOnList.length; i++) {
         let name = poweredOnList[i];
         console.log(`Refreshing screenshot state: ${ name }`)
-        document.querySelector(`img[class="screen"][tv="${ name }"]`)
+        document.querySelector(`img[class*="screen"][tv="${ name }"]`)
             .setAttribute("src", tvScreenshots[name]);
     }
 }
