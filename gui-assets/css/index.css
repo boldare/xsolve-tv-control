@@ -2,12 +2,14 @@ html {
     position: relative;
     min-height: 100%;
     width: 100vw;
+    overflow-x: hidden;
 }
 
 body {
     width: 100vw;
     background-color: #e2e2e2;
 }
+
 .main {
     margin-top: 20px;
     margin-left: 50px;
