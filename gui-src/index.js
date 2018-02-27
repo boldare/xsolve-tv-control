@@ -31,7 +31,15 @@ function drawTiles() {
                     <h4 class="card-title card-short-name" id="name" title="${ name }">${ name }</h4>
                     <p class="card-text">${ tvList[name].ip } <br /> ${ tvList[name].mac }</p>
                     <div class="screen-container">
-                        <img class="screen img-thumbnail" tv="${ name }" src="../gui-assets/images/screen-not-updated.png"/>
+                        <img
+                            class="screen img-thumbnail"
+                            tv="${ name }"
+                            src="../gui-assets/images/screen-not-updated.png"
+                            onclick="updateScreenModal('${name}')"
+                            data-toggle="modal"
+                            data-target="#screenModal"
+                            data-use-bootstrap-modal="false"
+                        />
                         <span class="dot screen-power-indicator" tv="${ name }" power="power-unknown"></span>
                     </div>
             </div>
@@ -40,6 +48,14 @@ function drawTiles() {
     }
 
     refreshTilesState();
+}
+
+function updateScreenModal(tileName) {
+    let img = document.querySelector(`img[class*="screen"][tv="${ tileName }"]`).src;
+    document.getElementById('screenshotImg').setAttribute("src", img);
+
+    let inputValue = document.getElementById(`tile_input_${ tileName }`).checked;
+    document.getElementById(`tile_input_${ tileName }`).checked = !inputValue;
 }
 
 async function refreshTilesState() {

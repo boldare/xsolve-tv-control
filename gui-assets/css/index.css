@@ -84,3 +84,8 @@ body {
 [power=power-unknown] {
     background-color: #a5a5a5;
 }
+
+#screenshotImg {
+    width: 100%;
+    height: auto;
+}
