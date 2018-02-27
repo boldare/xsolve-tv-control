@@ -18,11 +18,12 @@ function drawTiles() {
 
     for (var name in tvList) {
         tvListElem.innerHTML += `
-        <div class="card text-center" tv="${ name }">
+        <label class="card text-center" tv="${ name }" for="tile_input_${ name }">
             <div class="form-check">
                 <input
                     class="form-check-input position-static checkbox-big"
                     type="checkbox"
+                    id="tile_input_${ name }"
                     value="${ name }"
                 />
             </div>
