@@ -1,12 +1,12 @@
 {
-	"TV name 1": {
-		"ip": "",
-		"mac": "",
-		"key": ""
+	"TV name 1 (example)": {
+		"ip": "10.254.253.128",
+		"mac": "24:5C:0B:C3:82:73",
+		"key": "UFMq3BT4cQE6SWpr"
 	},
-	"TV name 2": {
-		"ip": "",
-		"mac": "",
-		"key": ""
+	"TV name 2 (example)": {
+		"ip": "10.254.253.129",
+		"mac": "BD:3F:CF:86:57:39",
+		"key": "5CFVnzEWMe5G4eZ6"
 	}
 }
