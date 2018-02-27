@@ -34,15 +34,17 @@ body {
 }
 
 .dot {
-  height: 25px;
-  width: 25px;
+  height: 10px;
+  width: 10px;
   border-radius: 50%;
   display: inline-block;
 }
 
 .screen {
     width: 100%;
-    height: auto;
+    height: auto + 15px;
+    padding-bottom: 15px;
+    background: #474747;
     border: solid 1px #8c8c8c;
 }
 
@@ -52,8 +54,21 @@ body {
     overflow: hidden;
 }
 
+.screen-container {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+.screen-power-indicator {
+    position: absolute;
+    bottom: 3px;
+    right: 4px;
+    filter: blur(1px);
+}
+
 [power=power-on] {
-    background-color: #79d879;
+    background-color: #5df75d;
 }
 
 [power=power-off] {

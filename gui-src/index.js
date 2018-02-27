@@ -4,7 +4,7 @@ const BrowserWindow = electron.remote.BrowserWindow
 
 const actions = require('../actions.js');
 const tvList = actions.getTvList();
-const tileAutoRefreshTime = 10000;
+const tileAutoRefreshTime = 20000;
 
 let tvPowerState = [];
 let tvScreenshots = [];
@@ -20,19 +20,25 @@ function drawTiles() {
         tvListElem.innerHTML += `
         <div class="card text-center" tv="${ name }">
             <div class="form-check">
-                <input class="form-check-input position-static checkbox-big" type="checkbox" value="${ name }">
+                <input
+                    class="form-check-input position-static checkbox-big"
+                    type="checkbox"
+                    value="${ name }"
+                />
             </div>
             <div class="card-body col align-self-center">
                     <h4 class="card-title card-short-name" id="name" title="${ name }">${ name }</h4>
                     <p class="card-text">${ tvList[name].ip } <br /> ${ tvList[name].mac }</p>
-                    <span class="dot" tv="${ name }" power="power-unknown"></span>
-                    <p>
-                    <img class="screen img-thumbnail" tv="${ name }" src="../gui-assets/images/screen-not-updated.png"/>
-                    </p>
+                    <div class="screen-container">
+                        <img class="screen img-thumbnail" tv="${ name }" src="../gui-assets/images/screen-not-updated.png"/>
+                        <span class="dot screen-power-indicator" tv="${ name }" power="power-unknown"></span>
+                    </div>
             </div>
         </div>
         `
     }
+
+    refreshTilesState();
 }
 
 async function refreshTilesState() {
@@ -41,7 +47,7 @@ async function refreshTilesState() {
 
     for (var name in tvList) {
         console.log(`Refreshing power state: ${ name }`)
-        document.querySelector(`span[class="dot"][tv="${ name }"]`)
+        document.querySelector(`span[class*="dot"][tv="${ name }"]`)
             .setAttribute("power", `power-${tvPowerState[name]}`);
 
         if(tvPowerState[name] == 'on') {
