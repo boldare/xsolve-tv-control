@@ -2,9 +2,9 @@
 XSolve TV Control is an application that allows to control multiple TVs on the same time.
 
 ## Features
-Actions may be executed for one, few or all TV. Currently implemented features:
+Actions may be executed for one, few or all TVs. Currently implemented features:
 
-- Turning TV On / Off
+- Turning TVs On / Off
 - Volume control
 - Running websites
 - Running Youtube videos
@@ -13,7 +13,7 @@ Actions may be executed for one, few or all TV. Currently implemented features:
 - Getting screenshots (only GUI version)
 
 ## Versions
-There are two ways of using XSolve TV - with GUI or CLI. With GUI you can control TVs in the easy way. CLI version may be useful for automating tasks for example to run TVs on specific hour etc.
+There are two ways of using XSolve TV Control - with GUI or CLI. With GUI you can control TVs in the easy way. CLI version may be useful for automating tasks for example to run TVs on specific hour etc.
 
 ## Supported TVs
 Currently only Sony Bravia TVs with Android TV are supported. Support for most Android TV devices may be added soon.
