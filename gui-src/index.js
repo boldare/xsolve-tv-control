@@ -87,6 +87,8 @@ async function refreshTilesState() {
     }
 }
 
+setTimeout(refreshTilesState(), 30000);
+
 function getDevicesPowerState() {
     console.log('getDevicesPowerState');
 
