@@ -1,7 +1,11 @@
 {
     "name": "XSolve-TV-control",
     "private": true,
-    "license": "UNLICENSED",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/xsolve-pl/xsolve-tv-control"
+    },
     "dependencies": {
         "bootstrap": "^4.0.0",
         "command-line-args": "^5.0.1",
