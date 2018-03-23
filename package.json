@@ -1,6 +1,5 @@
 {
     "name": "XSolve-TV-control",
-    "private": true,
     "license": "MIT",
     "repository": {
         "type": "git",
