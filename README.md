@@ -52,6 +52,9 @@ Go to `Settings` -> `Developer options` and enable `ADB debugging`.
 ## TV list
 TVs must be configured in `tvconfig.json` file - dist config `tvconfig-dist.json` is available.
 
+## Application config
+Applications must be configured in `appconfig.json` file - dist config `appconfig-dist.json` is available.
+
 # Building / running
 Just install dependencies:
 `npm install`
