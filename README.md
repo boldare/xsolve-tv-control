@@ -1,5 +1,5 @@
 # About
-XSolve TV Control is an application that allows to control multiple TVs on the same time.
+XSolve TV Control is an application that allows to control multiple TVs at the same time.
 
 ![alt XSolve TV Control GUI](https://raw.githubusercontent.com/xsolve-pl/xsolve-tv-control/master/gui-assets/images/gui-screen.jpg)
 
